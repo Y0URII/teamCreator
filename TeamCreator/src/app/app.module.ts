@@ -6,11 +6,14 @@ import { AppComponent } from './app.component';
 import {FormsModule, ReactiveFormsModule} from "@angular/forms";
 import { AuthComponent } from './auth/auth.component';
 import {FlexLayoutModule} from "@angular/flex-layout";
+import {CommonModule} from "@angular/common";
+import {HomeComponent} from "./home/home.component";
 
 @NgModule({
   declarations: [
     AppComponent,
     AuthComponent,
+    HomeComponent,
   ],
   imports: [
     BrowserModule,
@@ -18,6 +21,7 @@ import {FlexLayoutModule} from "@angular/flex-layout";
     FormsModule,
     ReactiveFormsModule,
     FlexLayoutModule,
+    CommonModule
   ],
   providers: [],
   bootstrap: [AppComponent]

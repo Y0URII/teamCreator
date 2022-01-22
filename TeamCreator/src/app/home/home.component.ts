@@ -1,7 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { Router, ActivatedRoute, ParamMap } from '@angular/router';
-import {User} from "../user";
-import {map} from "rxjs";
+import {User, userList} from "../user";
 
 @Component({
   selector: 'app-home',
@@ -10,11 +9,14 @@ import {map} from "rxjs";
 })
 export class HomeComponent implements OnInit {
 
-  constructor() {
-  }
+  userList = userList;
+  constructor(private router: Router) { }
 
   ngOnInit(): void {
-    console.log(history.state);
+    if(history.state.user == undefined){
+      this.router.navigate(['/auth']);
+    }
+    console.log(history.state.user);
   }
 
 }
