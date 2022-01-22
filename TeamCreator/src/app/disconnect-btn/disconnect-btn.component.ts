@@ -11,6 +11,7 @@ export class DisconnectBtnComponent{
 
   constructor(private router: Router) {}
 
+  // Suppression des données de l'utilisateur + redirection au login
   onClick(){
     history.state.user = undefined;
     this.router.navigate(['/auth']);
