@@ -9,6 +9,7 @@ import {FlexLayoutModule} from "@angular/flex-layout";
 import {CommonModule} from "@angular/common";
 import {HomeComponent} from "./home/home.component";
 import { DisconnectBtnComponent } from './disconnect-btn/disconnect-btn.component';
+import { AdminPageComponent } from './Views/admin-page/admin-page.component';
 
 @NgModule({
   declarations: [
@@ -16,6 +17,7 @@ import { DisconnectBtnComponent } from './disconnect-btn/disconnect-btn.componen
     AuthComponent,
     HomeComponent,
     DisconnectBtnComponent,
+    AdminPageComponent,
   ],
   imports: [
     BrowserModule,

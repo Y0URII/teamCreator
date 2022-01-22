@@ -1,0 +1,16 @@
+<p>Bienvenue Admin</p>
+<p>Formulaire pour la répartition des utilisateurs en groupes</p>
+
+<form [formGroup]="configurationForm" (ngSubmit)="onSubmit()">
+
+    <label for="totalUsers">Nombre total d'utilisateurs : </label><br>
+    <input required id="totalUsers" placeholder="2" type="number" min="2" formControlName="totalUsers" name="totalUsers">
+
+    <label for="usersByGroup">Nombre d'utilisateurs par groupe : </label><br>
+    <input required id="usersByGroup" placeholder="1" type="number" min="1" formControlName="usersByGroup" name="usersByGroup">
+
+    <label for="congifLastGroup">(Optionnel) Configuration du dernier groupe :</label><br>
+    <input id="congifLastGroup" placeholder="" type="number" formControlName="congifLastGroup" name="congifLastGroup">
+  
+    <button type="submit">Valider</button>
+</form>
