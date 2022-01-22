@@ -8,12 +8,14 @@ import { AuthComponent } from './auth/auth.component';
 import {FlexLayoutModule} from "@angular/flex-layout";
 import {CommonModule} from "@angular/common";
 import {HomeComponent} from "./home/home.component";
+import { DisconnectBtnComponent } from './disconnect-btn/disconnect-btn.component';
 
 @NgModule({
   declarations: [
     AppComponent,
     AuthComponent,
     HomeComponent,
+    DisconnectBtnComponent,
   ],
   imports: [
     BrowserModule,
