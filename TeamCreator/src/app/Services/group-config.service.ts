@@ -49,20 +49,61 @@ export class GroupConfigService {
    * @param usersByGroup 
    * @param lastConfig 
    */
-  public setGroupConfig(totalUsers:number,usersByGroup:number,lastConfig:LastGroupConfig){
-    //Equal number of users in group
+  public setGroupConfig(totalUsers:number, usersByGroup:number, lastConfig:LastGroupConfig){
+    // Equal number of users in group
     if(totalUsers % usersByGroup == 0){
-      this.groupConfiguration = new GroupConfiguration(totalUsers, usersByGroup, LastGroupConfig.None);
+      this.groupConfiguration = new GroupConfiguration(totalUsers % usersByGroup, usersByGroup, LastGroupConfig.None);
     }
-    //Last group has more users
-    else if(lastConfig == LastGroupConfig.LastMax){
-      this.groupConfiguration = new GroupConfiguration(totalUsers, totalUsers % usersByGroup, LastGroupConfig.LastMax);
-    }
+    // Use last group configuration parameter
     else {
-      // TODO : 
-      //this.groupConfiguration = new GroupConfiguration(totalUsers % usersByGroup, usersByGroup, LastGroupConfig.LastMin);
+      let realNbUsersByGroup = this.findUsersByGroupRepartition(totalUsers, usersByGroup, lastConfig);
+      this.groupConfiguration = new GroupConfiguration(totalUsers, totalUsers % realNbUsersByGroup, LastGroupConfig.LastMax);
     }
 
     //TODO: call group service to create group
+  }
+
+  /**
+   * Return optimal number of users by group
+   * @param totalUsers 
+   * @param usersByGroupWanted 
+   * @param config 
+   * @returns 
+   */
+  private findUsersByGroupRepartition(totalUsers:number, usersByGroupWanted:number, config:LastGroupConfig ){
+    let target:number = (config == LastGroupConfig.LastMax) ? totalUsers+ 1 : totalUsers -1;
+
+    let divisorList:Array<number> = this.findPrimeNumbers(target);
+
+    let result:number = 0;
+    
+    if (divisorList.length == 1){
+      result = divisorList[0];
+    }
+    // Get closest match
+    else if (divisorList.length > 1){
+      result = divisorList.reduce(function(prev, curr) {
+        return (Math.abs(curr - usersByGroupWanted) < Math.abs(prev - usersByGroupWanted) ? curr : prev);
+      })
+    }
+
+    return result;
+  }
+
+  /**
+   * Return prime number under the given number
+   * @param target 
+   * @returns 
+   */
+  private findPrimeNumbers(target:number){
+
+    let results:Array<number> = new Array<number>();
+
+    for (let index = target-1; index >= 2; index--) {
+      if(target % index == 0){
+        results.push(index);
+      }
+    }
+    return results;
   }
 }
