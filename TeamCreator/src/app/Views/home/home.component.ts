@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { Router, ActivatedRoute, ParamMap } from '@angular/router';
-import {User, userList} from "../user";
+import { User, userList } from 'src/app/Models/user';
 
 @Component({
   selector: 'app-home',
@@ -10,6 +10,7 @@ import {User, userList} from "../user";
 export class HomeComponent implements OnInit {
 
   userList = userList;
+  
   constructor(private router: Router) { }
 
   // Si l'utiliseur n'est pas connecté, redirection vers l'authentification
@@ -19,5 +20,6 @@ export class HomeComponent implements OnInit {
     }
     console.log(history.state.user);
   }
+
 
 }
