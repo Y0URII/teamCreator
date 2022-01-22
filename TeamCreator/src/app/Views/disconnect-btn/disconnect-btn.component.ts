@@ -8,7 +8,6 @@ import {Router} from "@angular/router";
 })
 export class DisconnectBtnComponent{
 
-
   constructor(private router: Router) {}
 
   // Suppression des données de l'utilisateur + redirection au login

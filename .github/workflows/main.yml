@@ -6,27 +6,18 @@ on:
       - develop
 
 jobs:
-  build_and_test:
+  build:
     runs-on: ubuntu-latest
-
-    strategy:
-      matrix:
-        node: [10, 12]
-
     steps:
-      - name: Checkout
-        uses: actions/checkout@v2
-
-      - name: Use Node.js ${{ matrix.node-version }}
+      - uses: actions/checkout@v2
+      - name: Use Node.js 14.x
         uses: actions/setup-node@v1
         with:
-          node-version: ${{ matrix.node-version }}
+          node-version: 14.x
 
-      - name: Install project
-        run: npm install
+      - name: Setup
+        run: npm ci
 
-      - name: Build the project
-        run: npm run build --if-present
-        
-      - name: Run tests
-        run: npm test
+      - name: Test
+        run: |
+          npm test -- --no-watch --no-progress --browsers=ChromeHeadlessCI

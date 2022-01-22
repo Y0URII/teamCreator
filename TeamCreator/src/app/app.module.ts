@@ -4,25 +4,23 @@ import { BrowserModule } from '@angular/platform-browser';
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import {FormsModule, ReactiveFormsModule} from "@angular/forms";
-import { AuthComponent } from './auth/auth.component';
-import {FlexLayoutModule} from "@angular/flex-layout";
-import {CommonModule} from "@angular/common";
-import {HomeComponent} from "./home/home.component";
-import { DisconnectBtnComponent } from './disconnect-btn/disconnect-btn.component';
+import {CommonModule} from '@angular/common';
+import { AuthComponent } from './Views/auth/auth.component';
+import { DisconnectBtnComponent } from './Views/disconnect-btn/disconnect-btn.component';
+import { HomeComponent } from './Views/home/home.component';
 
 @NgModule({
   declarations: [
     AppComponent,
     AuthComponent,
     HomeComponent,
-    DisconnectBtnComponent,
+    DisconnectBtnComponent
   ],
   imports: [
     BrowserModule,
     AppRoutingModule,
     FormsModule,
     ReactiveFormsModule,
-    FlexLayoutModule,
     CommonModule
   ],
   providers: [],
