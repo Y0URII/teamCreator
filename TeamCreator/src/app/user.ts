@@ -10,6 +10,7 @@ export class User {
   id: number;
   name: string | undefined;
 
+  // Création de l'utilisateur prenant en paramétre un nom
   constructor(name: string) {
     // Vérification si l'utilisateur exist
     userList.forEach((user) =>{

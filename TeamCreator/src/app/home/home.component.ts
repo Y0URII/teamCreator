@@ -12,6 +12,7 @@ export class HomeComponent implements OnInit {
   userList = userList;
   constructor(private router: Router) { }
 
+  // Si l'utiliseur n'est pas connecté, redirection vers l'authentification
   ngOnInit(): void {
     if(history.state.user == undefined){
       this.router.navigate(['/auth']);
