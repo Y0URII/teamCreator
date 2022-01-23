@@ -17,7 +17,7 @@ export class GroupConfigService {
   /**
   * Group Configuration
   */
-  private groupConfiguration: GroupConfiguration = new GroupConfiguration(0,0, LastGroupConfig.None);
+  private groupConfiguration: GroupConfiguration = new GroupConfiguration(0, 0, LastGroupConfig.None);
 
   /**
    * Indicate if an error happened on the set configuration
@@ -37,7 +37,7 @@ export class GroupConfigService {
    * Get Group Configuration
    * @returns GroupConfiguration
    */
-  public getGroupConfig() : Observable<GroupConfiguration> {
+  public getGroupConfig(): Observable<GroupConfiguration> {
     const config = of(this.groupConfiguration);
     return config;
   }
@@ -46,7 +46,7 @@ export class GroupConfigService {
    * Get is set error
    * @returns boolean
    */
-  public getErrorConfig() : Observable<boolean> {
+  public getErrorConfig(): Observable<boolean> {
     const error = of(this.isSetError);
     return error;
   }
@@ -84,7 +84,7 @@ export class GroupConfigService {
       }
 
       // Create groups
-      if(this.groupConfiguration != null && !this.isSetError){
+      if (this.groupConfiguration != null && !this.isSetError) {
         this.groupService.initializeGroup(this.groupConfiguration);
       }
     }

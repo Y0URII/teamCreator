@@ -1,4 +1,4 @@
-import { EventEmitter, Injectable, Output } from '@angular/core';
+import { Injectable } from '@angular/core';
 import { Observable, of } from 'rxjs';
 import { Group } from '../Models/group';
 import { GroupConfiguration, LastGroupConfig } from '../Models/group-configuration';
@@ -31,7 +31,7 @@ export class GroupService {
    * Constructor
    * @param groupConfigService 
    */
-  constructor(private userService: UserService) { 
+  constructor(private userService: UserService) {
     // This is intentional
   }
 
@@ -41,7 +41,7 @@ export class GroupService {
    * Initialize all the groups with the given configuration
    * @param config groupConfiguration
    */
-  public initializeGroup(config:GroupConfiguration){
+  public initializeGroup(config: GroupConfiguration) {
     this.groupList = new Array<Group>();
     this.configGroup = config;
 
@@ -53,10 +53,10 @@ export class GroupService {
     // Change user capacity
     switch (config.lastGroupConfig) {
       case LastGroupConfig.LastMax:
-        this.groupList[config.numberGroups -1].maxUsers = config.numberUsersByGroup + 1;
+        this.groupList[config.numberGroups - 1].maxUsers = config.numberUsersByGroup + 1;
         break;
       case LastGroupConfig.LastMax:
-        this.groupList[config.numberGroups -1].maxUsers = config.numberUsersByGroup - 1;
+        this.groupList[config.numberGroups - 1].maxUsers = config.numberUsersByGroup - 1;
         break;
       default:
         break;
@@ -68,7 +68,7 @@ export class GroupService {
    * @param id group id
    * @returns 
    */
-  public getGroupbyId(id:number){
+  public getGroupbyId(id: number) {
     return this.groupList.length != 0 ? this.groupList[id] : false;
   }
 
@@ -77,11 +77,11 @@ export class GroupService {
    * @param id group id
    * @param name user name
    */
-  public addUserToGroup(id: number, name: string){
+  public addUserToGroup(id: number, name: string) {
     let group = this.groupList[id];
-    if(!group.isGroupFull()){
+    if (!group.isGroupFull()) {
       let user = this.userService.getUserbyName(name);
-      if(user != null){
+      if (user != null) {
         // add user to group
         this.groupList[id].listUsers.push(user);
         // add group to user
@@ -95,15 +95,15 @@ export class GroupService {
    * @param userName 
    * @param groupId 
    */
-  public removeUserFromGroup(userName: string, groupId: number){
+  public removeUserFromGroup(userName: string, groupId: number) {
     let user = this.userService.getUserbyName(userName);
-    let group = this.groupList.find(group => group.id == groupId);
+    let group = this.groupList.find(groupe => groupe.id == groupId);
 
-    if(user != null && group != null){
+    if (user != null && group != null) {
       let groupIndex = this.groupList.findIndex(g => g == group);
       let userIndex = group.listUsers.findIndex(u => u == user);
 
-      this.groupList[groupIndex].listUsers.slice(userIndex);
+      this.groupList[groupIndex].listUsers.splice(userIndex);
       this.userService.setGroupToUser(user, -1);
     }
   }
@@ -113,8 +113,8 @@ export class GroupService {
    * @param all every groups
    * @returns 
    */
-  public getGroups(all:boolean) : Observable<Group[]> {
-    let result = all ? this.groupList : this.groupList.filter( group => group.isActive());
+  public getGroups(all: boolean): Observable<Group[]> {
+    let result = all ? this.groupList : this.groupList.filter(group => group.isActive());
     const groups = of(result);
     return groups;
   }

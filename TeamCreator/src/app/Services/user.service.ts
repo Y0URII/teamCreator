@@ -1,5 +1,4 @@
 import { Injectable } from '@angular/core';
-import { Group } from '../Models/group';
 import { User } from '../Models/user';
 
 @Injectable({
@@ -16,16 +15,21 @@ export class UserService {
   /**
    * List of users online
    */
-   userList: Array<User> = new Array<User>();
- 
-   //#endregion
+  userList: Array<User> = new Array<User>();
 
-  constructor() { }
+  //#endregion
+
+  /**
+   * Constructor
+   */
+  constructor() {
+    // This is intentional
+  }
 
   //#region Public Method
 
-  public addUser(user:User){
-    if(this.isUserUnique(user.name)){
+  public addUser(user: User) {
+    if (this.isUserUnique(user.name)) {
       this.userList.push(user);
     }
   }
@@ -34,7 +38,7 @@ export class UserService {
    * Remove user in list
    * @param user 
    */
-  public removeUser(user:User){
+  public removeUser(user: User) {
     this.userList.splice(this.userList.findIndex(u => u == user));
   }
 
@@ -43,13 +47,13 @@ export class UserService {
    * @param name 
    * @returns boolean
    */
-  public isUserUnique(name:string){
+  public isUserUnique(name: string) {
     return this.userList.every(user => user.name != name);
   }
 
-  public setGroupToUser(user:User, groupId:number){
+  public setGroupToUser(user: User, groupId: number) {
     let index = this.userList.findIndex(u => u == user);
-    if(index != -1){
+    if (index != -1) {
       this.userList[index].groupId = groupId;
     }
   }
@@ -59,7 +63,7 @@ export class UserService {
    * @param id user.name
    * @returns user
    */
-  public getUserbyName(name:string){
+  public getUserbyName(name: string) {
     return this.userList.find(user => user.name == name);
   }
 
@@ -67,7 +71,7 @@ export class UserService {
    * Get users list
    * @returns users list
    */
-  public getUsers(){
+  public getUsers() {
     return this.userList;
   }
 
