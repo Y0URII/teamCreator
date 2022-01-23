@@ -2,7 +2,6 @@ import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { catchError, Observable, of, tap } from 'rxjs';
 import { GroupConfiguration, LastGroupConfig } from '../Models/group-configuration';
-import { GroupService } from './group.service';
 
 @Injectable({
   providedIn: 'root'
@@ -20,7 +19,10 @@ export class GroupConfigService {
    */
   private configUrl = 'api/config';
 
-  httpOptions = {
+  /**
+   * http options
+   */
+  private httpOptions = {
     headers: new HttpHeaders({ 'Content-Type': 'application/json' })
   };
 
@@ -34,7 +36,7 @@ export class GroupConfigService {
   /**
    * Constructor
    */
-  constructor(private groupService: GroupService, private http: HttpClient) {
+  constructor(private http: HttpClient) {
     // This is intentional
   }
 
@@ -42,10 +44,10 @@ export class GroupConfigService {
    * Get Group Configuration
    * @returns GroupConfiguration
    */
-  public getGroupConfig(): Observable<GroupConfiguration> {
-    return this.http.get<GroupConfiguration>(this.configUrl)
+  public getGroupConfig(): Observable<GroupConfiguration[]> {
+    return this.http.get<GroupConfiguration[]>(this.configUrl)
                     .pipe(
-                      catchError(this.handleError<GroupConfiguration>('getConfig'))
+                      catchError(this.handleError<GroupConfiguration[]>('getConfig'))
                     );
   }
 
@@ -56,7 +58,7 @@ export class GroupConfigService {
    * @param lastConfig 
    */
   public setGroupConfig(data: GroupConfiguration): Observable<GroupConfiguration> {
-    
+
     if (data) {
       let totalUsers: number = data.totalUsers;
       let usersByGroup: number = data.numberUsersByGroup;
@@ -80,16 +82,14 @@ export class GroupConfigService {
         let realNbGroup = target / realNbUsersByGroup;
         this.setGroupConfiguration(realNbGroup, realNbUsersByGroup, config, totalUsers);
       }
-
-      // Create groups
-      if (this.groupConfiguration != null) {
-        this.groupService.initializeGroup(this.groupConfiguration);
-      }
     }
     return this.http.post<GroupConfiguration>(this.configUrl, this.groupConfiguration, this.httpOptions)
     .pipe(
-      tap((newConfig : GroupConfiguration) => console.log("config added in db")),
-      catchError(this.handleError<GroupConfiguration>('addGroupDonfig'))
+      tap((newConfig : GroupConfiguration) => {
+        console.log("config added in db");
+        console.log(newConfig);
+      }),
+      catchError(this.handleError<GroupConfiguration>('addGroupConfig'))
     );
   }
 

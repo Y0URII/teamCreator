@@ -5,7 +5,7 @@
             <span class="badge">{{group.id}}</span>
             <div *ngIf="isAdmin" class="d-flex justify-content-around m-3">
                 <button class="btn btn-danger">Supprimer le groupe</button>
-                <button class="btn btn-success" [disabled]="group.isGroupFull()">Ajouter un utilisateur</button>
+                <button class="btn btn-success" [disabled]="isGroupFull(group)">Ajouter un utilisateur</button>
             </div>
             <app-users-list [userList]="group.listUsers"></app-users-list>
         </li>

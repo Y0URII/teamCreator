@@ -1,4 +1,4 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { Group } from 'src/app/Models/group';
 import { GroupService } from 'src/app/Services/group.service';
 
@@ -16,16 +16,21 @@ export class GroupsListComponent implements OnInit {
   groupList: Array<Group> = new Array<Group>();
 
   /**
-   * Subscribe to Groups list
-   */
-  getGroupsList(): void {
-    this.groupService.getGroups(this.isAdmin).subscribe(groups => this.groupList = groups);
-  };
-
-  /**
    * Check user is admin
    */
   isAdmin: boolean = false;
+
+  /**
+   * Subscribe to Groups list
+   */
+   getGroupsList(): void {
+    this.groupService.GetGroups().subscribe(groups => {
+      //this.groupList = this.isAdmin ? groups : groups.filter(group => group.isActive() == true);
+      console.log(groups);
+      this.groupList = groups;
+      }
+    );
+  };
 
   /**
    * Constructor
@@ -34,7 +39,17 @@ export class GroupsListComponent implements OnInit {
     // This is intentional
   }
 
+  /**
+   * Check group is full
+   * @param group 
+   * @returns 
+   */
+  isGroupFull(group: Group){
+    return group.listUsers != null && group.maxUsers == group.listUsers.length;
+  }
+
   ngOnInit(): void {
     this.isAdmin = history.state.user?.name == "admin";
+    this.getGroupsList();
   }
 }

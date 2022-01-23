@@ -37,13 +37,13 @@
 
     <div class="m-3">
         <h3 class="pb-3">Configuration active</h3>
-        <ng-container *ngIf="groupConfiguration.numberGroups > 0" style="margin : 10px">
+        <ng-container *ngIf="groupConfiguration != null" style="margin : 10px">
             <p>Nombre d'utilisateurs par groupe : {{groupConfiguration.numberUsersByGroup}} </p>
             <p>Nombre de groupes : {{groupConfiguration.numberGroups}} </p>
             <p>Configuration du dernier groupe : {{groupConfiguration.lastGroupConfig}} </p>
             <p>Total d'utilisateurs : {{groupConfiguration.totalUsers}}</p>
         </ng-container>
-        <ng-container *ngIf="groupConfiguration.numberGroups < 1" style="margin : 10px">
+        <ng-container *ngIf="groupConfiguration == null" style="margin : 10px">
             <p>Aucune configuration n'est enregistrée pour le moment.</p>
         </ng-container>
     </div>

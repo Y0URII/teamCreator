@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { Group } from '../Models/group';
-import { LastGroupConfig } from '../Models/group-configuration';
+import { GroupConfiguration } from '../Models/group-configuration';
 import { User } from '../Models/user';
 
 @Injectable({
@@ -8,17 +8,10 @@ import { User } from '../Models/user';
 })
 export class InMemoryDataService implements InMemoryDataService {
 
-
   createDb() {
-    const users = [
-      { id: 1, name: 'test' }
-    ];
-    const groups = [
-      { id: 1, listUsers: new Array<User>(), maxUsers: 2 }
-    ];
-    const config = [
-      { numberGroup: 1, numberUsersByGroup: 2, lastGroupCOnfig: LastGroupConfig.None }
-    ];
+    const users: User[] = [];
+    const groups: Group[] = [];
+    const config: GroupConfiguration[] = [];
     return {users, groups, config};
   }
 

@@ -1,8 +1,9 @@
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { Observable, of } from 'rxjs';
+import { catchError, Observable, of, tap, timeout } from 'rxjs';
 import { Group } from '../Models/group';
 import { GroupConfiguration, LastGroupConfig } from '../Models/group-configuration';
+import { GroupConfigService } from './group-config.service';
 import { UserService } from './user.service';
 
 @Injectable({
@@ -17,6 +18,18 @@ export class GroupService {
   //#region Fields
 
   /**
+   * URL to web api
+   */
+  private groupUrl = 'api/groups';
+
+  /**
+   * http options
+   */
+  private httpOptions = {
+    headers: new HttpHeaders({ 'Content-Type': 'application/json' })
+  };
+
+  /**
    * List of groups created
    */
   groupList: Array<Group> = new Array<Group>();
@@ -26,42 +39,53 @@ export class GroupService {
    */
   configGroup: GroupConfiguration | null = null;
 
+  /**
+   * Subscribe to groupConfig from db
+   */
+  getConfig(): void {
+    this.groupConfigService.getGroupConfig().subscribe(config => this.configGroup = config.length != 0 ? config[0] : null);
+  };
+
   //#endregion
 
   /**
    * Constructor
    * @param groupConfigService 
    */
-  constructor(private userService: UserService, private http: HttpClient) {
+  constructor(private groupConfigService: GroupConfigService, 
+              private userService: UserService, 
+              private http: HttpClient) {
     // This is intentional
   }
 
   //#region Public Methods
 
   /**
+   * Get group list
+   * @returns 
+   */
+   public GetGroups(): Observable<Group[]> {
+    return this.http.get<Group[]>(this.groupUrl)
+                    .pipe(
+                      tap((groups: Array<Group>) => console.log(groups)),
+                      catchError(this.handleError<Group[]>('getGroups'))
+                    );
+  }
+
+  /**
    * Initialize all the groups with the given configuration
    * @param config groupConfiguration
    */
-  public initializeGroup(config: GroupConfiguration) {
-    this.groupList = new Array<Group>();
-    this.configGroup = config;
+  initializeGroup(): Observable<Array<Group>> {
 
-    // Create group
-    for (let index = 0; index < config.numberGroups; index++) {
-      this.groupList.push(new Group(index, config.numberUsersByGroup));
-    }
-
-    // Change user capacity
-    switch (config.lastGroupConfig) {
-      case LastGroupConfig.LastMax:
-        this.groupList[config.numberGroups - 1].maxUsers = config.numberUsersByGroup + 1;
-        break;
-      case LastGroupConfig.LastMax:
-        this.groupList[config.numberGroups - 1].maxUsers = config.numberUsersByGroup - 1;
-        break;
-      default:
-        break;
-    }
+    return this.http.post<Group[]>(this.groupUrl, this.createGroup(), this.httpOptions)
+    .pipe(
+      tap((groups: Array<Group>) => {
+        console.log("groups added in db");
+        console.log(groups);
+      }),
+      catchError(this.handleError<Array<Group>>('initialize groups'))
+    );
   }
 
   /**
@@ -80,7 +104,7 @@ export class GroupService {
    */
   public addUserToGroup(id: number, name: string) {
     let group = this.groupList[id];
-    if (!group.isGroupFull()) {
+    if (group.maxUsers != group.listUsers.length) {
       let user = this.userService.getUserbyName(name);
       if (user != null) {
         // add user to group
@@ -109,19 +133,46 @@ export class GroupService {
     }
   }
 
-  /**
-   * Get group list
-   * @param all every groups
-   * @returns 
-   */
-  public getGroups(all: boolean): Observable<Group[]> {
-    let result = all ? this.groupList : this.groupList.filter(group => group.isActive());
-    return of(result);
+  private handleError<T>(operation = 'operation', result?: T) {
+    return (error: any): Observable<T> => {
+      console.error(error);
+      // Let the app keep running by returning an empty result.
+      return of(result as T);
+    };
   }
 
   //#endregion
 
   //#region Private Methods
+
+  public createGroup(){
+    this.getConfig();
+    this.groupList = new Array<Group>();
+
+    // Set Time out else we don't have time to receive the group config
+      if(this.configGroup != null){
+        console.log("config is not null");
+
+        // Create group
+        for (let index = 0; index < this.configGroup.numberGroups; index++) {
+          this.groupList.push(new Group(index, this.configGroup.numberUsersByGroup));
+        }
+  
+        // Change user capacity
+        switch (this.configGroup.lastGroupConfig) {
+          case LastGroupConfig.LastMax:
+            this.groupList[this.configGroup.numberGroups - 1].maxUsers = this.configGroup.numberUsersByGroup + 1;
+            break;
+          case LastGroupConfig.LastMax:
+            this.groupList[this.configGroup.numberGroups - 1].maxUsers = this.configGroup.numberUsersByGroup - 1;
+            break;
+          default:
+            break;
+        }
+        return this.groupList;
+      }
+    return new Array<Group>();
+  }
 
   //#endregion
 }

@@ -20,6 +20,7 @@ import { UserService } from './Services/user.service';
 import { UsersListComponent } from './Views/users-list/users-list.component';
 import { GroupsListComponent } from './Views/groups-list/groups-list.component';
 import { CreateGroupButtonComponent } from './Views/create-group-button/create-group-button.component';
+import { InitializeGroupsButtonComponent } from './Views/initialize-groups-button/initialize-groups-button.component';
 
 @NgModule({
   declarations: [
@@ -31,7 +32,8 @@ import { CreateGroupButtonComponent } from './Views/create-group-button/create-g
     FormConfigurationComponent,
     UsersListComponent,
     GroupsListComponent,
-    CreateGroupButtonComponent
+    CreateGroupButtonComponent,
+    InitializeGroupsButtonComponent
   ],
   imports: [
     BrowserModule,

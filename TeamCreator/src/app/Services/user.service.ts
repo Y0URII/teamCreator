@@ -1,4 +1,6 @@
+import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Injectable } from '@angular/core';
+import { catchError, Observable, of } from 'rxjs';
 import { User } from '../Models/user';
 
 @Injectable({
@@ -12,6 +14,18 @@ export class UserService {
 
   //#region Fields
 
+    /**
+   * URL to web api
+   */
+     private userUrl = 'api/users';
+
+     /**
+      * http options
+      */
+     private httpOptions = {
+       headers: new HttpHeaders({ 'Content-Type': 'application/json' })
+     };
+
   /**
    * List of users online
    */
@@ -22,12 +36,27 @@ export class UserService {
   /**
    * Constructor
    */
-  constructor() {
+  constructor(private http: HttpClient) {
     // This is intentional
   }
 
   //#region Public Method
 
+    /**
+   * Get Group Configuration
+   * @returns GroupConfiguration
+   */
+  public getUsers(): Observable<User[]> {
+    return this.http.get<User[]>(this.userUrl)
+                    .pipe(
+                      catchError(this.handleError<User[]>('getConfig'))
+                    );
+  }
+
+  /**
+   * Add user
+   * @param user 
+   */
   public addUser(user: User) {
     if (this.isUserUnique(user.name)) {
       this.userList.push(user);
@@ -67,14 +96,15 @@ export class UserService {
     return this.userList.find(user => user.name == name);
   }
 
-  /**
-   * Get users list
-   * @returns users list
-   */
-  public getUsers() {
-    return this.userList;
-  }
-
   //#endregion
 
+  private handleError<T>(operation = 'operation', result?: T) {
+    return (error: any): Observable<T> => {
+  
+      console.error(error);
+  
+      // Let the app keep running by returning an empty result.
+      return of(result as T);
+    };
+  }
 }

@@ -17,18 +17,21 @@ export class FormConfigurationComponent implements OnInit {
   //#region Properties
 
   /**
-   * Last groupConfiguration saved from service
+   * Group configuration from service
    */
-  groupConfiguration: GroupConfiguration = new GroupConfiguration(-1,-1,LastGroupConfig.None, 0);
+  groupConfiguration: GroupConfiguration | null = null;
+
+  /**
+   * Subscrube to groupConfig from db
+   */
+  getConfig(): void {
+    this.groupConfigService.getGroupConfig().subscribe(config => this.groupConfiguration = config.length != 0 ? config[0] : null);
+  };
 
   /**
    * local enum LastGroupConfig for view
    */
   configs = LastGroupConfig;
-  
-  getconfig(): void {
-    this.groupConfigService.getGroupConfig().subscribe(config => this.groupConfiguration = config);
-  };
 
   /**
    * Form input for group configuration
@@ -50,14 +53,13 @@ export class FormConfigurationComponent implements OnInit {
   constructor(private groupConfigService: GroupConfigService, private formBuilder: FormBuilder) { }
 
   ngOnInit(): void {
-    this.getconfig();
+    this.getConfig();
   }
 
   /**
    * OnSubmit action update group configuration
    */
   onSubmit() {
-    console.log(this.configurationForm.value);
     this.groupConfigService.setGroupConfig(this.configurationForm.value)
       .subscribe(config => {
         this.groupConfiguration = config;

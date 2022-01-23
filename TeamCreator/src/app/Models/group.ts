@@ -24,20 +24,4 @@ export class Group {
         this.maxUsers = maxUsers;
     }
 
-    /**
-     * Is group full
-     * @returns boolean
-     */
-    public isGroupFull(){
-        return this.maxUsers == this.listUsers.length;
-    }
-
-    /**
-     * Is group activated
-     * @returns boolean
-     */
-    public isActive(){
-        return this.listUsers.length > 1;
-    }
-
 }
