@@ -26,7 +26,7 @@ export class FormConfigurationComponent implements OnInit {
    */
   getConfig(): void {
     this.groupConfigService.getGroupConfig().subscribe(config => this.groupConfiguration = config.length != 0 ? config[0] : null);
-  };
+  }
 
   /**
    * local enum LastGroupConfig for view
@@ -50,7 +50,9 @@ export class FormConfigurationComponent implements OnInit {
    * @param groupConfigService 
    * @param formBuilder 
    */
-  constructor(private groupConfigService: GroupConfigService, private formBuilder: FormBuilder) { }
+  constructor(private groupConfigService: GroupConfigService, private formBuilder: FormBuilder) { 
+    // This is intentional
+  }
 
   ngOnInit(): void {
     this.getConfig();

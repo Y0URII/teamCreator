@@ -25,12 +25,10 @@ export class GroupsListComponent implements OnInit {
    */
    getGroupsList(): void {
     this.groupService.GetGroups().subscribe(groups => {
-      //this.groupList = this.isAdmin ? groups : groups.filter(group => group.isActive() == true);
       console.log(groups);
       this.groupList = groups;
-      }
-    );
-  };
+      });
+    };
 
   /**
    * Constructor

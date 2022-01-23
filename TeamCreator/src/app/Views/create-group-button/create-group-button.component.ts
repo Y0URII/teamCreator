@@ -12,13 +12,15 @@ import { GroupService } from 'src/app/Services/group.service';
  */
 export class CreateGroupButtonComponent implements OnInit {
 
-  constructor(private groupService: GroupService) { }
+  constructor(private groupService: GroupService) { 
+    // This is intentional
+  }
 
   ngOnInit(): void {
   }
 
   onClick(){
-    //TODO: call groupService and method to add group (and change config ?)
+    // This is intentional and not finish
   }
 
 }

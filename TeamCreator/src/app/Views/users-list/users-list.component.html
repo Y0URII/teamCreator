@@ -4,7 +4,6 @@
         <li *ngFor="let user of usersList">
             <span class="badge">{{user.id}}</span> {{user.name}}
             <div *ngIf="isAdmin">
-                <!-- TODO remove user from group -->
             </div>
         </li>
     </ul>

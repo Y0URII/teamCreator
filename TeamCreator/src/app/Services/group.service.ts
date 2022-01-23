@@ -1,6 +1,6 @@
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { catchError, Observable, of, tap, timeout } from 'rxjs';
+import { catchError, Observable, of, tap } from 'rxjs';
 import { Group } from '../Models/group';
 import { GroupConfiguration, LastGroupConfig } from '../Models/group-configuration';
 import { User } from '../Models/user';
@@ -45,7 +45,7 @@ export class GroupService {
    */
   getConfig(): void {
     this.groupConfigService.getGroupConfig().subscribe(config => this.configGroup = config.length != 0 ? config[0] : null);
-  };
+  }
 
   //#endregion
 
@@ -53,9 +53,9 @@ export class GroupService {
    * Constructor
    * @param groupConfigService 
    */
-  constructor(private groupConfigService: GroupConfigService, 
-              private userService: UserService, 
-              private http: HttpClient) {
+  constructor(private groupConfigService: GroupConfigService,
+    private userService: UserService,
+    private http: HttpClient) {
     // This is intentional
   }
 
@@ -65,12 +65,12 @@ export class GroupService {
    * Get group list
    * @returns 
    */
-   public GetGroups(): Observable<Group[]> {
+  public GetGroups(): Observable<Group[]> {
     return this.http.get<Group[]>(this.groupUrl)
-                    .pipe(
-                      tap((groups: Array<Group>) => console.log(groups)),
-                      catchError(this.handleError<Group[]>('getGroups'))
-                    );
+      .pipe(
+        tap((groups: Array<Group>) => console.log(groups)),
+        catchError(this.handleError<Group[]>('getGroups'))
+      );
   }
 
   /**
@@ -80,13 +80,13 @@ export class GroupService {
   initializeGroup(): Observable<Array<Group>> {
 
     return this.http.post<Group[]>(this.groupUrl, this.createGroup(), this.httpOptions)
-    .pipe(
-      tap((groups: Array<Group>) => {
-        console.log("groups added in db");
-        console.log(groups);
-      }),
-      catchError(this.handleError<Array<Group>>('initialize groups'))
-    );
+      .pipe(
+        tap((groups: Array<Group>) => {
+          console.log("groups added in db");
+          console.log(groups);
+        }),
+        catchError(this.handleError<Array<Group>>('initialize groups'))
+      );
   }
 
   /**
@@ -146,31 +146,30 @@ export class GroupService {
 
   //#region Private Methods
 
-  public createGroup(){
+  public createGroup() {
     this.getConfig();
     this.groupList = new Array<Group>();
 
-    // Set Time out else we don't have time to receive the group config
-      if(this.configGroup != null){
+    if (this.configGroup != null) {
 
-        // Create group
-        for (let index = 0; index < this.configGroup.numberGroups; index++) {
-          this.groupList.push(new Group(index, this.configGroup.numberUsersByGroup, new Array<User>()));
-        }
-  
-        // Change user capacity
-        switch (this.configGroup.lastGroupConfig) {
-          case LastGroupConfig.LastMax:
-            this.groupList[this.configGroup.numberGroups - 1].maxUsers = this.configGroup.numberUsersByGroup + 1;
-            break;
-          case LastGroupConfig.LastMax:
-            this.groupList[this.configGroup.numberGroups - 1].maxUsers = this.configGroup.numberUsersByGroup - 1;
-            break;
-          default:
-            break;
-        }
-        return this.groupList;
+      // Create group
+      for (let index = 0; index < this.configGroup.numberGroups; index++) {
+        this.groupList.push(new Group(index, this.configGroup.numberUsersByGroup, new Array<User>()));
       }
+
+      // Change user capacity
+      switch (this.configGroup.lastGroupConfig) {
+        case LastGroupConfig.LastMax:
+          this.groupList[this.configGroup.numberGroups - 1].maxUsers = this.configGroup.numberUsersByGroup + 1;
+          break;
+        case LastGroupConfig.LastMax:
+          this.groupList[this.configGroup.numberGroups - 1].maxUsers = this.configGroup.numberUsersByGroup - 1;
+          break;
+        default:
+          break;
+      }
+      return this.groupList;
+    }
     return new Array<Group>();
   }
 

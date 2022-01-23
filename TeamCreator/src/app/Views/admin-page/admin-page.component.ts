@@ -1,6 +1,5 @@
 import { Component, OnInit } from '@angular/core';
 import { Group } from 'src/app/Models/group';
-import { GroupService } from 'src/app/Services/group.service';
 
 @Component({
   selector: 'app-admin-page',
