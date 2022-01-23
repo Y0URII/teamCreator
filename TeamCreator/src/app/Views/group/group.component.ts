@@ -37,7 +37,10 @@ export class GroupComponent implements OnInit {
   }
 
   generateInvitation(groupId: number) {
-    return window.location.origin + "/invit/" + Math.random().toString(36).substr(2, 9) + "?g="+groupId
+    const crypto = window.crypto;
+    var array = new Uint32Array(1);
+    crypto.getRandomValues(array);
+    return window.location.origin + "/invit/" + crypto.getRandomValues(array).toString().substr(2, 9) + "?g="+groupId
   }
 
 
