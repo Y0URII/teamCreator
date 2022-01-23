@@ -1,6 +1,4 @@
-import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { Group } from '../Models/group';
 import { GroupConfiguration, LastGroupConfig } from '../Models/group-configuration';
 
 @Injectable({
@@ -19,6 +17,11 @@ export class GroupConfigService {
   */
   private groupConfiguration: GroupConfiguration | null = null;
 
+  /**
+   * Indicate if an error happened on the set configuration
+   */
+  private isSetError: boolean = true;
+
   //#endregion
 
   /**
@@ -35,6 +38,14 @@ export class GroupConfigService {
   }
 
   /**
+   * Get is set error
+   * @returns boolean
+   */
+  public getSetError(){
+    return this.isSetError;
+  }
+
+  /**
    * Set Group Configuration
    * @param totalUsers 
    * @param usersByGroup 
@@ -46,12 +57,12 @@ export class GroupConfigService {
       console.log(data + "\n");
       let totalUsers: number = data.totalUsers;
       let usersByGroup: number = data.usersByGroup;
-      //configLastGroup
 
       // Equal number of users in group
-      if(totalUsers % usersByGroup == 0){
+      if(totalUsers % usersByGroup == 0 && usersByGroup > 1){
         console.log("equal number\n");
         this.groupConfiguration = new GroupConfiguration(totalUsers / usersByGroup, usersByGroup, LastGroupConfig.None);
+        this.isSetError = false;
       }
       // Use last group configuration parameter
       else {
@@ -65,10 +76,16 @@ export class GroupConfigService {
           target += 1;
         }
 
-        let realNbUsersByGroup = this.findUsersByGroupRepartition(target, usersByGroup, config);
-        let realNbGroup = target / realNbUsersByGroup;
-        this.groupConfiguration = new GroupConfiguration(realNbGroup, realNbUsersByGroup, config);
-        console.log("RESULT = realNbGroup:" + realNbGroup + " realNbUsersByGroup =" + realNbUsersByGroup + " config=" + config);
+        let realNbUsersByGroup = this.findUsersByGroupRepartition(target, usersByGroup);
+        if(realNbUsersByGroup > 1){
+          let realNbGroup = target / realNbUsersByGroup;
+          this.groupConfiguration = new GroupConfiguration(realNbGroup, realNbUsersByGroup, config);
+          this.isSetError = false;
+        }
+        else{
+          this.isSetError = true;
+        }
+
       }
   
       //TODO: call group service to create group
@@ -81,17 +98,11 @@ export class GroupConfigService {
    * Return optimal number of users by group
    * @param target 
    * @param usersByGroupWanted 
-   * @param config 
    * @returns 
    */
-  private findUsersByGroupRepartition(target:number, usersByGroupWanted:number, config:LastGroupConfig ){
-    console.log("Start finding nb group...\n");
-    console.log(config)
+  private findUsersByGroupRepartition(target:number, usersByGroupWanted:number){
 
     let divisorList:Array<number> = this.findDivisor(target);
-    console.log("Divisor found: ");
-    divisorList.forEach(e=> console.log(e));
-
     let result:number = 0;
     
     if (divisorList.length == 1){
@@ -101,7 +112,6 @@ export class GroupConfigService {
     else if (divisorList.length > 1){
       result = this.findClosestResult(divisorList, usersByGroupWanted);
     }
-    console.log("Result: " + result);
 
     return result;
   }
@@ -116,15 +126,11 @@ export class GroupConfigService {
     let difference = list[0] > target ? list[0] - target : target - list[0];
     let result = list[0];
 
-    console.log("start finding closest result");
-    console.log("difference= " + difference + ", result= " + result);
-
     for (let index = 1; index < list.length; index++) {
       let newDifference = list[index] > target ? list[index] - target : target - list[index];
       if(newDifference < difference){
         difference = newDifference;
         result = list[index];
-        console.log("difference= " + difference + ", result= " + result);
       }
     }
     return result;

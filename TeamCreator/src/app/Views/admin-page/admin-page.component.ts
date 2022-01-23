@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { AbstractControl, FormBuilder, Validators } from '@angular/forms';
+import { AbstractControl, FormBuilder, FormControl, Validators } from '@angular/forms';
 import { GroupConfiguration, LastGroupConfig } from 'src/app/Models/group-configuration';
 import { GroupConfigService } from 'src/app/Services/group-config.service';
 
@@ -25,6 +25,11 @@ export class AdminPageComponent implements OnInit {
    * local enum LastGroupConfig for view
    */
   configs = LastGroupConfig;
+
+  /**
+   * Indicator of error during set config in service
+   */
+  isSetError:boolean = false;
 
   /**
    * Form input for group configuration
@@ -53,10 +58,13 @@ export class AdminPageComponent implements OnInit {
   onSubmit() {
     let result = this.configurationForm.value;
     console.log(result);
-    let lastConfig: keyof typeof LastGroupConfig = result.configLastGroup;
     this.groupConfigService.setGroupConfig(this.configurationForm.value);
-    this.groupConfiguration = this.groupConfigService.getGroupConfig();
-    this.configurationForm.reset();
+    this.isSetError = this.groupConfigService.getSetError();
+    // if no error during set config
+    if(!this.groupConfigService.getSetError()){
+      this.groupConfiguration = this.groupConfigService.getGroupConfig();
+      this.configurationForm.reset();
+    }
   }
 
   /**
@@ -66,6 +74,24 @@ export class AdminPageComponent implements OnInit {
    */
   shouldShowRequiredError(control: AbstractControl){
     return !control.pristine && control.hasError('required');
+  }
+
+  /**
+   * Validator minimum number of group
+   * @param control 
+   * @returns 
+   */
+  shouldHaveMinGroupError(control: AbstractControl){
+    return control.value < 1;
+  }
+
+  /**
+   * Validator minimum number of user
+   * @param control 
+   * @returns 
+   */
+  shouldHaveMinUserError(control: AbstractControl){
+    return control.value < 2;
   }
 
   /**
