@@ -1,8 +1,12 @@
-<form [formGroup]="invitForm" (ngSubmit)="onSubmit()">
+<div class="container m-3">
+  <form class="m-3" [formGroup]="invitForm" (ngSubmit)="onSubmit()">
 
-  <h2>Rejoingnez le groupe numéro {{ idGroup }} : </h2>
-  <label for="username">Login : </label><br>
-  <input required id="username" placeholder="Username" type="text" formControlName="name" name="name">
+    <h2>Rejoingnez le groupe numéro {{ idGroup }} : </h2>
+    <label for="username">Login : </label><br>
+    <input class="ml-3" required id="username" placeholder="Username" type="text" formControlName="name" name="name">
 
-  <button type="submit">Submit</button>
-</form>
+    <div class="d-flex justify-content-around m-3">
+      <button class="btn btn-primary">Valider</button>
+    </div>
+  </form>
+</div>

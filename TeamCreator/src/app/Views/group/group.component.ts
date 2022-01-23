@@ -48,7 +48,7 @@ export class GroupComponent implements OnInit {
     groupList.forEach((group) =>{
       if(group.id === groupId){
         group.listUsers.push(user);
-        user.group = groupId;
+        user.groupId = groupId;
       }
     });
   }

@@ -3,6 +3,7 @@ import { Injectable } from '@angular/core';
 import { catchError, Observable, of, tap, timeout } from 'rxjs';
 import { Group } from '../Models/group';
 import { GroupConfiguration, LastGroupConfig } from '../Models/group-configuration';
+import { User } from '../Models/user';
 import { GroupConfigService } from './group-config.service';
 import { UserService } from './user.service';
 
@@ -151,11 +152,10 @@ export class GroupService {
 
     // Set Time out else we don't have time to receive the group config
       if(this.configGroup != null){
-        console.log("config is not null");
 
         // Create group
         for (let index = 0; index < this.configGroup.numberGroups; index++) {
-          this.groupList.push(new Group(index, this.configGroup.numberUsersByGroup));
+          this.groupList.push(new Group(index, this.configGroup.numberUsersByGroup, new Array<User>()));
         }
   
         // Change user capacity

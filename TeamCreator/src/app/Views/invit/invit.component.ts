@@ -31,7 +31,7 @@ export class InvitComponent implements OnInit {
       this.router.navigate(['/admin'], {state: {user: new User(this.invitForm.value.name)}});
     } else {
       let user = new User(this.invitForm.value.name)
-      user.group = this.idGroup;
+      user.groupId = this.idGroup ?? 0;
       this.router.navigate(['/home'], {state: {user: user}});
     }
   }
