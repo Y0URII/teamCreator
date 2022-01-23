@@ -12,6 +12,8 @@ import { HomeComponent } from './Views/home/home.component';
 import { AdminPageComponent } from './Views/admin-page/admin-page.component';
 import { GroupConfigService } from './Services/group-config.service';
 import { FormConfigurationComponent } from './Views/admin-page/form-configuration/form-configuration.component';
+import { GroupService } from './Services/group.service';
+import { UserService } from './Services/user.service';
 
 @NgModule({
   declarations: [
@@ -29,7 +31,7 @@ import { FormConfigurationComponent } from './Views/admin-page/form-configuratio
     ReactiveFormsModule,
     CommonModule
   ],
-  providers: [GroupConfigService],
+  providers: [GroupConfigService, GroupService, UserService],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

@@ -1,5 +1,6 @@
 import { Injectable } from '@angular/core';
 import { GroupConfiguration, LastGroupConfig } from '../Models/group-configuration';
+import { GroupService } from './group.service';
 
 @Injectable({
   providedIn: 'root'
@@ -27,15 +28,15 @@ export class GroupConfigService {
   /**
    * Constructor
    */
-  constructor() {
+  constructor(private groupService: GroupService) {
     // This is intentional
-   }
+  }
 
   /**
    * Get Group Configuration
    * @returns GroupConfiguration
    */
-  public getGroupConfig(){
+  public getGroupConfig() {
     return this.groupConfiguration;
   }
 
@@ -43,7 +44,7 @@ export class GroupConfigService {
    * Get is set error
    * @returns boolean
    */
-  public getSetError(){
+  public getSetError() {
     return this.isSetError;
   }
 
@@ -53,24 +54,24 @@ export class GroupConfigService {
    * @param usersByGroup 
    * @param lastConfig 
    */
-  public setGroupConfig(data:any){
+  public setGroupConfig(data: any) {
     this.isSetError = true;
-    if(data){
+    if (data) {
       let totalUsers: number = data.totalUsers;
       let usersByGroup: number = data.usersByGroup;
 
       // Equal number of users in group
-      if(totalUsers % usersByGroup == 0){
+      if (totalUsers % usersByGroup == 0) {
         this.setGroupConfiguration(totalUsers / usersByGroup, usersByGroup, LastGroupConfig.None);
       }
       // Use last group configuration parameter
       else {
         let config = data.configLastGroup == LastGroupConfig.LastMax ? LastGroupConfig.LastMax : LastGroupConfig.LastMin;
 
-        let target:number = totalUsers;
-        if(config == LastGroupConfig.LastMax){
+        let target: number = totalUsers;
+        if (config == LastGroupConfig.LastMax) {
           target -= 1;
-        } else if (config == LastGroupConfig.LastMin){
+        } else if (config == LastGroupConfig.LastMin) {
           target += 1;
         }
 
@@ -78,8 +79,11 @@ export class GroupConfigService {
         let realNbGroup = target / realNbUsersByGroup;
         this.setGroupConfiguration(realNbGroup, realNbUsersByGroup, config);
       }
-  
-      //TODO: call group service to create group
+
+      // Create groups
+      if(this.groupConfiguration != null){
+        this.groupService.initializeGroup(this.groupConfiguration);
+      }
     }
   }
 
@@ -91,8 +95,8 @@ export class GroupConfigService {
    * @param nbUsersByGroup 
    * @param config 
    */
-  private setGroupConfiguration(nbGroups: number, nbUsersByGroup: number, config: LastGroupConfig){
-    if(nbUsersByGroup > 1){
+  private setGroupConfiguration(nbGroups: number, nbUsersByGroup: number, config: LastGroupConfig) {
+    if (nbUsersByGroup > 1) {
       this.groupConfiguration = new GroupConfiguration(nbGroups, nbUsersByGroup, config);
       this.isSetError = false;
     }
@@ -104,16 +108,16 @@ export class GroupConfigService {
    * @param usersByGroupWanted 
    * @returns 
    */
-  private findUsersByGroupRepartition(target:number, usersByGroupWanted:number){
+  private findUsersByGroupRepartition(target: number, usersByGroupWanted: number) {
 
-    let divisorList:Array<number> = this.findDivisor(target);
-    let result:number = 0;
-    
-    if (divisorList.length == 1){
+    let divisorList: Array<number> = this.findDivisor(target);
+    let result: number = 0;
+
+    if (divisorList.length == 1) {
       result = divisorList[0];
     }
     // Get closest match
-    else if (divisorList.length > 1){
+    else if (divisorList.length > 1) {
       result = this.findClosestResult(divisorList, usersByGroupWanted);
     }
 
@@ -126,13 +130,13 @@ export class GroupConfigService {
    * @param target desired number
    * @returns 
    */
-  private findClosestResult(list: Array<number>, target: number){
+  private findClosestResult(list: Array<number>, target: number) {
     let difference = list[0] > target ? list[0] - target : target - list[0];
     let result = list[0];
 
     for (let index = 1; index < list.length; index++) {
       let newDifference = list[index] > target ? list[index] - target : target - list[index];
-      if(newDifference < difference){
+      if (newDifference < difference) {
         difference = newDifference;
         result = list[index];
       }
@@ -145,16 +149,16 @@ export class GroupConfigService {
    * @param target 
    * @returns 
    */
-  private findDivisor(target:number){
+  private findDivisor(target: number) {
 
-    let results:Array<number> = new Array<number>();
+    let results: Array<number> = new Array<number>();
 
-    for (let index = target-1; index > 1; index--) {
-      if(target % index == 0){
+    for (let index = target - 1; index > 1; index--) {
+      if (target % index == 0) {
         results.push(index);
       }
     }
- 
+
     return results;
   }
 

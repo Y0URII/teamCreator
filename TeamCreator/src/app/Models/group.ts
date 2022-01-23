@@ -10,6 +10,7 @@ export class Group {
     public id = 0;
     public maxUsers = 0;
     public listUsers:Array<User> = new Array<User>();
+    public activated = false;
 
     //#endregion
 
@@ -19,10 +20,17 @@ export class Group {
      * @param maxUsers 
      * @param listUsers 
      */
-    constructor(id: number, maxUsers: number, listUsers: Array<User>) {
+    constructor(id: number, maxUsers: number) {
         this.id = id;
         this.maxUsers = maxUsers;
-        this.listUsers = listUsers;
+    }
+
+    /**
+     * Is group full
+     * @returns boolean
+     */
+    public isGroupFull(){
+        return this.maxUsers == this.listUsers.length;
     }
 
 }

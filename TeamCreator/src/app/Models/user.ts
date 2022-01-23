@@ -1,8 +1,10 @@
+import { Group } from "./group";
+
 export const userList: User[] = [
-{ id: 1, name: 'marion' },
-{ id: 2, name: 'issiah' },
-{ id: 3, name: 'vincent' },
-{ id: 4, name: 'damien' },
+{ id: 1, name: 'marion', groupId: -1 },
+{ id: 2, name: 'issiah', groupId: -1 },
+{ id: 3, name: 'vincent', groupId: -1 },
+{ id: 4, name: 'damien', groupId: -1 }
 ];
 
 /**
@@ -10,8 +12,13 @@ export const userList: User[] = [
  */
 export class User {
 
-    id: number;
-  name: string | undefined;
+  //#region Properties
+
+  id: number;
+  name: string = "";
+  groupId: number = -1;
+
+  //#endregion
 
   // Création de l'utilisateur prenant en paramétre un nom
   constructor(name: string) {
@@ -20,6 +27,7 @@ export class User {
       if(name.toLowerCase() === user.name){
         this.id = user.id;
         this.name = user.name;
+        this.groupId = user.groupId;
       }
     });
 
