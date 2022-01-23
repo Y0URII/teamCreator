@@ -13,7 +13,7 @@ export const userList: User[] = [
 export class User {
 
     id: number;
-  name: string | undefined;
+  name: string = '';
 
   // Création de l'utilisateur prenant en paramétre un nom
   constructor(name: string) {

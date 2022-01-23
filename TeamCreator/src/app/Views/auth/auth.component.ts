@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
-import {FormControl, FormGroup} from "@angular/forms";
-import {Router} from "@angular/router";
+import { FormControl, FormGroup } from "@angular/forms";
+import { Router } from "@angular/router";
 import { User } from 'src/app/Models/user';
 
 @Component({
@@ -20,7 +20,6 @@ export class AuthComponent implements OnInit {
   }
 
   onSubmit() {
-
     if(this.authForm.value.name == "admin"){
       this.router.navigate(['/admin'], {state: {user: new User(this.authForm.value.name)}});
     } else {

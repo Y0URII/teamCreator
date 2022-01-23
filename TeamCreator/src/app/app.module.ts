@@ -8,13 +8,15 @@ import {CommonModule} from '@angular/common';
 import { AuthComponent } from './Views/auth/auth.component';
 import { DisconnectBtnComponent } from './Views/disconnect-btn/disconnect-btn.component';
 import { HomeComponent } from './Views/home/home.component';
+import { GroupComponent } from './Views/group/group.component';
 
 @NgModule({
   declarations: [
     AppComponent,
     AuthComponent,
     HomeComponent,
-    DisconnectBtnComponent
+    DisconnectBtnComponent,
+    GroupComponent
   ],
   imports: [
     BrowserModule,
