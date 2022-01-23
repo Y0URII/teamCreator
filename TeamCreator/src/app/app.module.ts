@@ -14,6 +14,7 @@ import { UserComponent } from './Views/user/user.component';
 import { InvitComponent } from './Views/invit/invit.component';
 import { GroupConfigService } from './Services/group-config.service';
 import { FormConfigurationComponent } from './Views/admin-page/form-configuration/form-configuration.component';
+import {AdminPageComponent} from "./Views/admin-page/admin-page.component";
 
 @NgModule({
   declarations: [
@@ -25,7 +26,8 @@ import { FormConfigurationComponent } from './Views/admin-page/form-configuratio
     UserComponent,
     InvitComponent,
     GroupComponent,
-    FormConfigurationComponent
+    FormConfigurationComponent,
+    AdminPageComponent
   ],
   imports: [
     BrowserModule,

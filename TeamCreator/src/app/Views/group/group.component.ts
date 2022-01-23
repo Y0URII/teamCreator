@@ -64,7 +64,11 @@ export class GroupComponent implements OnInit {
 
     // @ts-ignore
     if(possibleGroupTab.length !== 0){
-      let randomGroupId = possibleGroupTab[Math.floor(Math.random() * possibleGroupTab.length)];
+      const crypto = window.crypto;
+      var array = new Uint32Array(1);
+      crypto.getRandomValues(array)
+      // @ts-ignore
+      let randomGroupId = possibleGroupTab[Math.floor(crypto.getRandomValues(array) * possibleGroupTab.length)];
       this.joinGroup(randomGroupId, history.state.user);
       history.state.user.group = randomGroupId;
       this.router.navigate(['/home'], {state: {user: history.state.user, group: randomGroupId}});
