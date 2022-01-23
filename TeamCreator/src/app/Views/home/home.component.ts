@@ -1,8 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { Router, ActivatedRoute, ParamMap } from '@angular/router';
-import { User, userList } from 'src/app/Models/user';
-import {Group, groupList} from "../../Models/group";
-
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-home',

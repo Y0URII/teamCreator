@@ -16,7 +16,8 @@ export class GroupConfiguration {
 
     public numberGroups = 0;
     public numberUsersByGroup = 0;
-    public lastGroupConfig = LastGroupConfig.None
+    public lastGroupConfig = LastGroupConfig.None;
+    public totalUsers = 0;
 
     //#endregion
 
@@ -26,9 +27,10 @@ export class GroupConfiguration {
      * @param maxUsers 
      * @param lastGroupConfig 
      */
-     constructor(numberGroups: number, numberUsersByGroup: number, lastGroupConfig: LastGroupConfig) {
+     constructor(numberGroups: number, numberUsersByGroup: number, lastGroupConfig: LastGroupConfig, totalUsers: number) {
         this.numberGroups = numberGroups;
         this.numberUsersByGroup = numberUsersByGroup;
         this.lastGroupConfig = lastGroupConfig;
+        this.totalUsers = totalUsers;
     }
 }

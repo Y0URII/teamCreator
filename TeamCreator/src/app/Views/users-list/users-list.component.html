@@ -1,0 +1,11 @@
+<div class="container m-3">
+    <h3>Liste des utilisateurs</h3>
+    <ul class="users" *ngIf="usersList != null">
+        <li *ngFor="let user of usersList">
+            <span class="badge">{{user.id}}</span> {{user.name}}
+            <div *ngIf="isAdmin">
+            </div>
+        </li>
+    </ul>
+    <p *ngIf="usersList.length == 0">Aucun utilisateur</p>
+</div>

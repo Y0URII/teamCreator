@@ -1,5 +1,5 @@
 <div class="container m-3">
-    <p>Formulaire pour la répartition des utilisateurs en groupes</p>
+    <h3>Formulaire pour la répartition des utilisateurs en groupes</h3>
 
     <form class="m-3" [formGroup]="configurationForm" (ngSubmit)="onSubmit()">
 
@@ -11,25 +11,26 @@
         </div>
 
         <div>
-            <label for="usersByGroup">Nombre d'utilisateurs par groupe : </label>
-            <input class="ml-3" id="usersByGroup" placeholder="1" type="number" min="1" formControlName="usersByGroup" name="usersByGroup">
-            <span class="ml-3" *ngIf="shouldShowRequiredError(configurationForm.controls['usersByGroup'])" class="alert">Ce champ est requis</span>
-            <span class="ml-3" *ngIf="shouldHaveMinGroupError(configurationForm.controls['usersByGroup'])" class="alert">Minimum 1 groupe</span>
+            <label for="numberUsersByGroup">Nombre d'utilisateurs par groupe : </label>
+            <input class="ml-3" id="numberUsersByGroup" placeholder="1" type="number" min="1" formControlName="numberUsersByGroup" name="numberUsersByGroup">
+            <span class="ml-3" *ngIf="shouldShowRequiredError(configurationForm.controls['numberUsersByGroup'])" class="alert">Ce champ est requis</span>
+            <span class="ml-3" *ngIf="shouldHaveMinGroupError(configurationForm.controls['numberUsersByGroup'])" class="alert">Minimum 1 groupe</span>
         </div>
 
         <div>
             <label for="configLastGroup">Configuration du dernier groupe :</label>
             <select class="ml-3" id="configLastGroup" formControlName="configLastGroup">
-                <option *ngFor="let config of configs | keyvalue" [value]="config.value">{{config.value}}</option>
+                <option *ngFor="let config of configs | keyvalue" [value]="config.value" [selected]="config.key == 'NONE'">{{config.value}}</option>
             </select>
+        </div>
+
+        <div>
+            <input [hidden]="true" id="numberGroups" type="number" formControlName="numberGroups" name="numberGroups" value="0">
         </div>
     
         <div class="d-flex justify-content-around m-3">
             <button class="btn btn-success">Valider</button>
         </div>
-        <ng-container *ngIf="isSetError" style="margin : 10px">
-            <p>Les paramètres de construction des groupes n'obtiennent aucun résultat satisfaisant. Veuillez les modifier.</p>
-        </ng-container>
     </form>
 
     <hr>
@@ -40,7 +41,7 @@
             <p>Nombre d'utilisateurs par groupe : {{groupConfiguration.numberUsersByGroup}} </p>
             <p>Nombre de groupes : {{groupConfiguration.numberGroups}} </p>
             <p>Configuration du dernier groupe : {{groupConfiguration.lastGroupConfig}} </p>
-            <p>Total d'utilisateurs : {{getTotalUsers()}}</p>
+            <p>Total d'utilisateurs : {{groupConfiguration.totalUsers}}</p>
         </ng-container>
         <ng-container *ngIf="groupConfiguration == null" style="margin : 10px">
             <p>Aucune configuration n'est enregistrée pour le moment.</p>

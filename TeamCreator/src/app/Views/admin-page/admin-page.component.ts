@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { Group } from 'src/app/Models/group';
 
 @Component({
   selector: 'app-admin-page',
@@ -11,6 +12,8 @@ import { Component, OnInit } from '@angular/core';
  */
 export class AdminPageComponent implements OnInit {
 
+  public listOfGroups: Array<Group> = new Array<Group>();
+
   /**
    * Constructor 
    */
@@ -20,6 +23,7 @@ export class AdminPageComponent implements OnInit {
 
   ngOnInit(): void {
     // This is intentional
+    console.log(history.state.user);
   }
 
 }

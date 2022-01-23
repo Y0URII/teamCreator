@@ -1,11 +1,12 @@
-<div>
-  <p>Vous êtes connecté en tant que <strong>{{user.name}}</strong></p>
+<div class="container">
+  <div>
+    <p>Vous êtes connecté en tant que <strong>{{user.name}}</strong></p>
+  </div>
+  
+  <div *ngIf="userGroupDefined">
+    <p>Vous faite partie du groupe n°<strong>{{user.group}}</strong></p>
+  </div>
+    <app-disconnect-btn class="float-right"></app-disconnect-btn> 
+    <app-user></app-user>
+    <app-group></app-group>
 </div>
-
-<div *ngIf="userGroupDefined">
-  <p>Vous faite partie du groupe n°<strong>{{user.group}}</strong></p>
-</div>
-
-<app-user></app-user>
-<app-group></app-group>
-<app-disconnect-btn></app-disconnect-btn>

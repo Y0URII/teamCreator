@@ -1,4 +1,6 @@
+import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Injectable } from '@angular/core';
+import { catchError, Observable, of, tap } from 'rxjs';
 import { GroupConfiguration, LastGroupConfig } from '../Models/group-configuration';
 
 @Injectable({
@@ -13,38 +15,40 @@ export class GroupConfigService {
   //#region Fields
 
   /**
-  * Group Configuration
-  */
-  private groupConfiguration: GroupConfiguration | null = null;
+   * URL to web api
+   */
+  private configUrl = 'api/config';
 
   /**
-   * Indicate if an error happened on the set configuration
+   * http options
    */
-  private isSetError: boolean = true;
+  private httpOptions = {
+    headers: new HttpHeaders({ 'Content-Type': 'application/json' })
+  };
+
+  /**
+  * Group Configuration
+  */
+  private groupConfiguration: GroupConfiguration = new GroupConfiguration(0, 0, LastGroupConfig.None, 0);
 
   //#endregion
 
   /**
    * Constructor
    */
-  constructor() {
+  constructor(private http: HttpClient) {
     // This is intentional
-   }
+  }
 
   /**
    * Get Group Configuration
    * @returns GroupConfiguration
    */
-  public getGroupConfig(){
-    return this.groupConfiguration;
-  }
-
-  /**
-   * Get is set error
-   * @returns boolean
-   */
-  public getSetError(){
-    return this.isSetError;
+  public getGroupConfig(): Observable<GroupConfiguration[]> {
+    return this.http.get<GroupConfiguration[]>(this.configUrl)
+                    .pipe(
+                      catchError(this.handleError<GroupConfiguration[]>('getConfig'))
+                    );
   }
 
   /**
@@ -53,34 +57,40 @@ export class GroupConfigService {
    * @param usersByGroup 
    * @param lastConfig 
    */
-  public setGroupConfig(data:any){
-    this.isSetError = true;
-    if(data){
+  public setGroupConfig(data: GroupConfiguration): Observable<GroupConfiguration> {
+
+    if (data) {
       let totalUsers: number = data.totalUsers;
-      let usersByGroup: number = data.usersByGroup;
+      let usersByGroup: number = data.numberUsersByGroup;
 
       // Equal number of users in group
-      if(totalUsers % usersByGroup == 0){
-        this.setGroupConfiguration(totalUsers / usersByGroup, usersByGroup, LastGroupConfig.None);
+      if (totalUsers % usersByGroup == 0) {
+        this.setGroupConfiguration(totalUsers / usersByGroup, usersByGroup, LastGroupConfig.None, totalUsers);
       }
       // Use last group configuration parameter
       else {
-        let config = data.configLastGroup == LastGroupConfig.LastMax ? LastGroupConfig.LastMax : LastGroupConfig.LastMin;
+        let config = data.lastGroupConfig == LastGroupConfig.LastMax ? LastGroupConfig.LastMax : LastGroupConfig.LastMin;
 
-        let target:number = totalUsers;
-        if(config == LastGroupConfig.LastMax){
+        let target: number = totalUsers;
+        if (config == LastGroupConfig.LastMax) {
           target -= 1;
-        } else if (config == LastGroupConfig.LastMin){
+        } else if (config == LastGroupConfig.LastMin) {
           target += 1;
         }
 
         let realNbUsersByGroup = this.findUsersByGroupRepartition(target, usersByGroup);
         let realNbGroup = target / realNbUsersByGroup;
-        this.setGroupConfiguration(realNbGroup, realNbUsersByGroup, config);
+        this.setGroupConfiguration(realNbGroup, realNbUsersByGroup, config, totalUsers);
       }
-  
-      //TODO: call group service to create group
     }
+    return this.http.post<GroupConfiguration>(this.configUrl, this.groupConfiguration, this.httpOptions)
+    .pipe(
+      tap((newConfig : GroupConfiguration) => {
+        console.log("config added in db");
+        console.log(newConfig);
+      }),
+      catchError(this.handleError<GroupConfiguration>('addGroupConfig'))
+    );
   }
 
   //#region Privates Methods
@@ -91,10 +101,9 @@ export class GroupConfigService {
    * @param nbUsersByGroup 
    * @param config 
    */
-  private setGroupConfiguration(nbGroups: number, nbUsersByGroup: number, config: LastGroupConfig){
-    if(nbUsersByGroup > 1){
-      this.groupConfiguration = new GroupConfiguration(nbGroups, nbUsersByGroup, config);
-      this.isSetError = false;
+  private setGroupConfiguration(nbGroups: number, nbUsersByGroup: number, config: LastGroupConfig, totalUsers: number) {
+    if (nbUsersByGroup > 1) {
+      this.groupConfiguration = new GroupConfiguration(nbGroups, nbUsersByGroup, config, totalUsers);
     }
   }
 
@@ -104,16 +113,16 @@ export class GroupConfigService {
    * @param usersByGroupWanted 
    * @returns 
    */
-  private findUsersByGroupRepartition(target:number, usersByGroupWanted:number){
+  private findUsersByGroupRepartition(target: number, usersByGroupWanted: number) {
 
-    let divisorList:Array<number> = this.findDivisor(target);
-    let result:number = 0;
-    
-    if (divisorList.length == 1){
+    let divisorList: Array<number> = this.findDivisor(target);
+    let result: number = 0;
+
+    if (divisorList.length == 1) {
       result = divisorList[0];
     }
     // Get closest match
-    else if (divisorList.length > 1){
+    else if (divisorList.length > 1) {
       result = this.findClosestResult(divisorList, usersByGroupWanted);
     }
 
@@ -126,13 +135,13 @@ export class GroupConfigService {
    * @param target desired number
    * @returns 
    */
-  private findClosestResult(list: Array<number>, target: number){
+  private findClosestResult(list: Array<number>, target: number) {
     let difference = list[0] > target ? list[0] - target : target - list[0];
     let result = list[0];
 
     for (let index = 1; index < list.length; index++) {
       let newDifference = list[index] > target ? list[index] - target : target - list[index];
-      if(newDifference < difference){
+      if (newDifference < difference) {
         difference = newDifference;
         result = list[index];
       }
@@ -145,17 +154,26 @@ export class GroupConfigService {
    * @param target 
    * @returns 
    */
-  private findDivisor(target:number){
+  private findDivisor(target: number) {
 
-    let results:Array<number> = new Array<number>();
+    let results: Array<number> = new Array<number>();
 
-    for (let index = target-1; index > 1; index--) {
-      if(target % index == 0){
+    for (let index = target - 1; index > 1; index--) {
+      if (target % index == 0) {
         results.push(index);
       }
     }
- 
+
     return results;
+  }
+
+  private handleError<T>(operation = 'operation', result?: T) {
+    return (error: any): Observable<T> => {
+  
+      console.error(error); // log to console instead
+      // Let the app keep running by returning an empty result.
+      return of(result as T);
+    };
   }
 
   //#endregion
