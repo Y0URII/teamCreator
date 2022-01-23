@@ -1,5 +1,7 @@
 import { Component, OnInit } from '@angular/core';
-import { FormControl, FormGroup } from '@angular/forms';
+import { AbstractControl, FormBuilder, Validators } from '@angular/forms';
+import { GroupConfiguration, LastGroupConfig } from 'src/app/Models/group-configuration';
+import { GroupConfigService } from 'src/app/Services/group-config.service';
 
 @Component({
   selector: 'app-admin-page',
@@ -12,21 +14,81 @@ import { FormControl, FormGroup } from '@angular/forms';
  */
 export class AdminPageComponent implements OnInit {
 
-  configurationForm = new FormGroup({
-    totalUsers: new FormControl(''),
-    usersByGroup: new FormControl(''),
-    congifLastGroup: new FormControl('')
+  //#region Properties
+
+  /**
+   * Last groupConfiguration saved from service
+   */
+  groupConfiguration : GroupConfiguration | null = null;
+
+  /**
+   * local enum LastGroupConfig for view
+   */
+  configs = LastGroupConfig;
+
+  /**
+   * Form input for group configuration
+   */
+  configurationForm = this.formBuilder.group({
+    totalUsers: [2, Validators.required],
+    usersByGroup: [2, Validators.required],
+    configLastGroup: ['']
   });
 
-  constructor() { 
-    //TODO add IOD
-  }
+  //#endregion
+
+  /**
+   * Constructor
+   * @param groupConfigService 
+   * @param formBuilder 
+   */
+  constructor(private groupConfigService: GroupConfigService, private formBuilder: FormBuilder) {  }
 
   ngOnInit(): void {
   }
 
+  /**
+   * OnSubmit action update group configuration
+   */
   onSubmit() {
-    //TODO set in service
+    let result = this.configurationForm.value;
+    console.log(result);
+    let lastConfig: keyof typeof LastGroupConfig = result.configLastGroup;
+    this.groupConfigService.setGroupConfig(this.configurationForm.value);
+    this.groupConfiguration = this.groupConfigService.getGroupConfig();
+    this.configurationForm.reset();
+  }
+
+  /**
+   * Validators
+   * @param control
+   * @returns 
+   */
+  shouldShowRequiredError(control: AbstractControl){
+    return !control.pristine && control.hasError('required');
+  }
+
+  /**
+   * Get total number of users base on the configuration group
+   * @returns number total of users
+   */
+  getTotalUsers(){
+    if(this.groupConfiguration != null){
+      let result = this.groupConfiguration.numberGroups * this.groupConfiguration.numberUsersByGroup; 
+      switch (this.groupConfiguration.lastGroupConfig) {
+        case LastGroupConfig.LastMax:
+          result += 1;
+          break;
+        case LastGroupConfig.LastMin:
+          result -= 1;
+          break;
+        case LastGroupConfig.None:
+        default:
+          break;
+      }
+      return result;
+    }
+    return '';
   }
 
 }

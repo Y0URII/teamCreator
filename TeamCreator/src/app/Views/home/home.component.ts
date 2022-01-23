@@ -18,8 +18,8 @@ export class HomeComponent implements OnInit {
     if(history.state.user == undefined){
       this.router.navigate(['/auth']);
     }
+
     console.log(history.state.user);
   }
-
 
 }

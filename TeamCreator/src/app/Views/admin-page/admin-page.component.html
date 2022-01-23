@@ -1,16 +1,43 @@
-<p>Bienvenue Admin</p>
+<h1>Bienvenue Admin</h1>
+<app-disconnect-btn></app-disconnect-btn>
 <p>Formulaire pour la répartition des utilisateurs en groupes</p>
 
 <form [formGroup]="configurationForm" (ngSubmit)="onSubmit()">
 
-    <label for="totalUsers">Nombre total d'utilisateurs : </label><br>
-    <input required id="totalUsers" placeholder="2" type="number" min="2" formControlName="totalUsers" name="totalUsers">
+    <div>
+        <label for="totalUsers">Nombre total d'utilisateurs : </label>
+        <input required id="totalUsers" placeholder="2" type="number" min="2" formControlName="totalUsers" name="totalUsers">
+        <span *ngIf="shouldShowRequiredError(configurationForm.controls['totalUsers'])" class="alert">This field is requiered</span>
+    </div>
 
-    <label for="usersByGroup">Nombre d'utilisateurs par groupe : </label><br>
-    <input required id="usersByGroup" placeholder="1" type="number" min="1" formControlName="usersByGroup" name="usersByGroup">
+    <div>
+        <label for="usersByGroup">Nombre d'utilisateurs par groupe : </label>
+        <input required id="usersByGroup" placeholder="1" type="number" min="1" formControlName="usersByGroup" name="usersByGroup">
+        <span *ngIf="shouldShowRequiredError(configurationForm.controls['usersByGroup'])" class="alert">This field is requiered</span>
+    </div>
 
-    <label for="congifLastGroup">(Optionnel) Configuration du dernier groupe :</label><br>
-    <input id="congifLastGroup" placeholder="" type="number" formControlName="congifLastGroup" name="congifLastGroup">
+    <div>
+        <label for="configLastGroup">Configuration du dernier groupe :</label>
+        <select class="form-control" id="configLastGroup" formControlName="configLastGroup">
+            <option [ngValue]="null" selected>Optionnel ...</option>
+            <option *ngFor="let config of configs | keyvalue" [value]="config.value">{{config.value}}</option>
+        </select>
+    </div>
   
-    <button type="submit">Valider</button>
+    <div class="d-flex justify-content-around">
+        <button type="submit">Valider</button>
+    </div>
 </form>
+
+<div>
+    <h3>Configuration active</h3>
+    <ng-container *ngIf="groupConfiguration != null" style="margin : 10px">
+        <p>Nombre d'utilisateurs par groupe : {{groupConfiguration.numberUsersByGroup}} </p>
+        <p>Nombre de groupes : {{groupConfiguration.numberGroups}} </p>
+        <p>Configuration du dernier groupe : {{groupConfiguration.lastGroupConfig}} </p>
+        <p>Total d'utilisateurs : {{getTotalUsers()}}</p>
+    </ng-container>
+    <ng-container *ngIf="groupConfiguration == null" style="margin : 10px">
+        <p>Aucune configuration n'est enregistrée pour le moment.</p>
+    </ng-container>
+</div>
