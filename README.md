@@ -4,15 +4,13 @@
 - GitHub
 - Angular
 - Jenkins
-- Sonar Qube ?
+- Sonar Cloud
 
 ## TODO : Functionnalities
-- [ ] UNIT TESTS !!!!!!!!!!!!! TDD or BDD ?
-- [ ] Login
-- [ ] Administrator view :
-  + [ ] Edit number of users
-  + [ ] number of users in group
-  + [ ] configuration of the last group (multiple, LAST_MIN, LAST_Max)
+- [ ] UNIT Tests
+- [x] Login
+- [x] Administrator view :
+  + [x] configuration of the last group (multiple, LAST_MIN, LAST_Max)
  - [ ] User view :
   + [ ] List users without group
   + [ ] Ask to create a group => create invitation link to share (group created only when an user accept the invitation)
@@ -24,9 +22,9 @@
   + [ ] Random join group => join a group created with one place left or create a new group
   + [ ] A group must have at least 2 members or be deleted
   + [ ] group dispatch, number, etc
-  + [ ] Just a login (no password) for an user
+  + [x] Just a login (no password) for an user
   + [ ] Group name can be generic 'group1', 'group2', etc
-  + [ ] An administrator can be identify with the pseudo 'admin'
+  + [x] An administrator can be identify with the pseudo 'admin'
 
 ## TODO : Functionnalities More
 - [ ] UI admin : 
@@ -49,7 +47,7 @@
 - [ ] CI Pipeline :
   + [ ] Unit Test
   + [ ] Integration Test
-  + [ ] Source code Analysis (Sonar Qube ?)
+  + [x] Source code Analysis (Sonar Cloud)
   + [ ] Compilation
   + [ ] Publish reports
 - [ ] Jenkins Server :
@@ -63,8 +61,8 @@
 - [ ] Report complet :
   + [ ] reference to source code
   + [ ] Schema of pipeline
-  + [ ] Screenshot of code review (git ?)
-  + [ ] Screenshot of code analysis (Sonar Qube ?)
+  + [x] Screenshot of code review
+  + [x] Screenshot of code analysis
   + [ ] Screenshot configuration Jenkins
   + [ ] Screenshot jobs Jenkins
   + [ ] Screenshot pipeline created

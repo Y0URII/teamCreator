@@ -1,0 +1,49 @@
+<div class="container m-3">
+    <p>Formulaire pour la répartition des utilisateurs en groupes</p>
+
+    <form class="m-3" [formGroup]="configurationForm" (ngSubmit)="onSubmit()">
+
+        <div>
+            <label for="totalUsers">Nombre total d'utilisateurs : </label>
+            <input class="ml-3" id="totalUsers" placeholder="2" type="number" min="2" formControlName="totalUsers" name="totalUsers">
+            <span class="ml-3" *ngIf="shouldShowRequiredError(configurationForm.controls['totalUsers'])" class="alert">Ce champ est requis</span>
+            <span class="ml-3" *ngIf="shouldHaveMinUserError(configurationForm.controls['totalUsers'])" class="alert">Minimum 2 utilisateurs par groupe</span>
+        </div>
+
+        <div>
+            <label for="usersByGroup">Nombre d'utilisateurs par groupe : </label>
+            <input class="ml-3" id="usersByGroup" placeholder="1" type="number" min="1" formControlName="usersByGroup" name="usersByGroup">
+            <span class="ml-3" *ngIf="shouldShowRequiredError(configurationForm.controls['usersByGroup'])" class="alert">Ce champ est requis</span>
+            <span class="ml-3" *ngIf="shouldHaveMinGroupError(configurationForm.controls['usersByGroup'])" class="alert">Minimum 1 groupe</span>
+        </div>
+
+        <div>
+            <label for="configLastGroup">Configuration du dernier groupe :</label>
+            <select class="ml-3" id="configLastGroup" formControlName="configLastGroup">
+                <option *ngFor="let config of configs | keyvalue" [value]="config.value">{{config.value}}</option>
+            </select>
+        </div>
+    
+        <div class="d-flex justify-content-around m-3">
+            <button class="btn btn-success">Valider</button>
+        </div>
+        <ng-container *ngIf="isSetError" style="margin : 10px">
+            <p>Les paramètres de construction des groupes n'obtiennent aucun résultat satisfaisant. Veuillez les modifier.</p>
+        </ng-container>
+    </form>
+
+    <hr>
+
+    <div class="m-3">
+        <h3 class="pb-3">Configuration active</h3>
+        <ng-container *ngIf="groupConfiguration != null" style="margin : 10px">
+            <p>Nombre d'utilisateurs par groupe : {{groupConfiguration.numberUsersByGroup}} </p>
+            <p>Nombre de groupes : {{groupConfiguration.numberGroups}} </p>
+            <p>Configuration du dernier groupe : {{groupConfiguration.lastGroupConfig}} </p>
+            <p>Total d'utilisateurs : {{getTotalUsers()}}</p>
+        </ng-container>
+        <ng-container *ngIf="groupConfiguration == null" style="margin : 10px">
+            <p>Aucune configuration n'est enregistrée pour le moment.</p>
+        </ng-container>
+    </div>
+</div>

@@ -3,6 +3,7 @@ import { Router, ActivatedRoute, ParamMap } from '@angular/router';
 import { User, userList } from 'src/app/Models/user';
 import {Group, groupList} from "../../Models/group";
 
+
 @Component({
   selector: 'app-home',
   templateUrl: './home.component.html',
@@ -18,6 +19,7 @@ export class HomeComponent implements OnInit {
   userWithoutGroupList: User[] = [];
 
   constructor(private router: Router) { }
+
 
   // Si l'utiliseur n'est pas connecté, redirection vers l'authentification
   ngOnInit(): void {
@@ -39,6 +41,5 @@ export class HomeComponent implements OnInit {
       }
     });
   }
-
 
 }
