@@ -1,5 +1,3 @@
-import { Group } from "./group";
-
 export const userList: User[] = [
 { id: 1, name: 'marion', group: undefined},
 { id: 2, name: 'issiah', group: undefined},

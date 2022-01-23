@@ -1,7 +1,4 @@
-import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import * as internal from 'stream';
-import { Group } from '../Models/group';
 import { GroupConfiguration, LastGroupConfig } from '../Models/group-configuration';
 
 @Injectable({
@@ -16,24 +13,23 @@ export class GroupConfigService {
   //#region Fields
 
   /**
- * List Of Group
- */
-    private listGroups:Array<Group> = new Array<Group>();
+  * Group Configuration
+  */
+  private groupConfiguration: GroupConfiguration | null = null;
 
-    /**
-    * Group Configuration
-    */
-    private groupConfiguration: GroupConfiguration = new GroupConfiguration(0,0, LastGroupConfig.None);
+  /**
+   * Indicate if an error happened on the set configuration
+   */
+  private isSetError: boolean = true;
 
   //#endregion
 
   /**
    * Constructor
-   * @param _httpClient 
    */
-  constructor(private _httpClient: HttpClient) { 
-
-  }
+  constructor() {
+    // This is intentional
+   }
 
   /**
    * Get Group Configuration
@@ -44,37 +40,73 @@ export class GroupConfigService {
   }
 
   /**
+   * Get is set error
+   * @returns boolean
+   */
+  public getSetError(){
+    return this.isSetError;
+  }
+
+  /**
    * Set Group Configuration
    * @param totalUsers 
    * @param usersByGroup 
    * @param lastConfig 
    */
-  public setGroupConfig(totalUsers:number, usersByGroup:number, lastConfig:LastGroupConfig){
-    // Equal number of users in group
-    if(totalUsers % usersByGroup == 0){
-      this.groupConfiguration = new GroupConfiguration(totalUsers % usersByGroup, usersByGroup, LastGroupConfig.None);
-    }
-    // Use last group configuration parameter
-    else {
-      let realNbUsersByGroup = this.findUsersByGroupRepartition(totalUsers, usersByGroup, lastConfig);
-      this.groupConfiguration = new GroupConfiguration(totalUsers, totalUsers % realNbUsersByGroup, LastGroupConfig.LastMax);
-    }
+  public setGroupConfig(data:any){
+    this.isSetError = true;
+    if(data){
+      let totalUsers: number = data.totalUsers;
+      let usersByGroup: number = data.usersByGroup;
 
-    //TODO: call group service to create group
+      // Equal number of users in group
+      if(totalUsers % usersByGroup == 0){
+        this.setGroupConfiguration(totalUsers / usersByGroup, usersByGroup, LastGroupConfig.None);
+      }
+      // Use last group configuration parameter
+      else {
+        let config = data.configLastGroup == LastGroupConfig.LastMax ? LastGroupConfig.LastMax : LastGroupConfig.LastMin;
+
+        let target:number = totalUsers;
+        if(config == LastGroupConfig.LastMax){
+          target -= 1;
+        } else if (config == LastGroupConfig.LastMin){
+          target += 1;
+        }
+
+        let realNbUsersByGroup = this.findUsersByGroupRepartition(target, usersByGroup);
+        let realNbGroup = target / realNbUsersByGroup;
+        this.setGroupConfiguration(realNbGroup, realNbUsersByGroup, config);
+      }
+  
+      //TODO: call group service to create group
+    }
+  }
+
+  //#region Privates Methods
+
+  /**
+   * Set private group configuration
+   * @param nbGroups 
+   * @param nbUsersByGroup 
+   * @param config 
+   */
+  private setGroupConfiguration(nbGroups: number, nbUsersByGroup: number, config: LastGroupConfig){
+    if(nbUsersByGroup > 1){
+      this.groupConfiguration = new GroupConfiguration(nbGroups, nbUsersByGroup, config);
+      this.isSetError = false;
+    }
   }
 
   /**
    * Return optimal number of users by group
-   * @param totalUsers 
+   * @param target 
    * @param usersByGroupWanted 
-   * @param config 
    * @returns 
    */
-  private findUsersByGroupRepartition(totalUsers:number, usersByGroupWanted:number, config:LastGroupConfig ){
-    let target:number = (config == LastGroupConfig.LastMax) ? totalUsers+ 1 : totalUsers -1;
+  private findUsersByGroupRepartition(target:number, usersByGroupWanted:number){
 
-    let divisorList:Array<number> = this.findPrimeNumbers(target);
-
+    let divisorList:Array<number> = this.findDivisor(target);
     let result:number = 0;
     
     if (divisorList.length == 1){
@@ -82,11 +114,29 @@ export class GroupConfigService {
     }
     // Get closest match
     else if (divisorList.length > 1){
-      result = divisorList.reduce(function(prev, curr) {
-        return (Math.abs(curr - usersByGroupWanted) < Math.abs(prev - usersByGroupWanted) ? curr : prev);
-      })
+      result = this.findClosestResult(divisorList, usersByGroupWanted);
     }
 
+    return result;
+  }
+
+  /**
+   * Return the closest match from the list of possibilities
+   * @param list possibilities
+   * @param target desired number
+   * @returns 
+   */
+  private findClosestResult(list: Array<number>, target: number){
+    let difference = list[0] > target ? list[0] - target : target - list[0];
+    let result = list[0];
+
+    for (let index = 1; index < list.length; index++) {
+      let newDifference = list[index] > target ? list[index] - target : target - list[index];
+      if(newDifference < difference){
+        difference = newDifference;
+        result = list[index];
+      }
+    }
     return result;
   }
 
@@ -95,15 +145,18 @@ export class GroupConfigService {
    * @param target 
    * @returns 
    */
-  private findPrimeNumbers(target:number){
+  private findDivisor(target:number){
 
     let results:Array<number> = new Array<number>();
 
-    for (let index = target-1; index >= 2; index--) {
+    for (let index = target-1; index > 1; index--) {
       if(target % index == 0){
         results.push(index);
       }
     }
+ 
     return results;
   }
+
+  //#endregion
 }

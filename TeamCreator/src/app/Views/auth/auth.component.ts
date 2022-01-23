@@ -17,6 +17,7 @@ export class AuthComponent implements OnInit {
   constructor(private router: Router) { }
 
   ngOnInit(): void {
+    // This is intentional
   }
 
   onSubmit() {
