@@ -1,5 +1,12 @@
 <div class="container">
-    <h1 class="mb-3">Bienvenue</h1>
-    <app-disconnect-btn class="float-right"></app-disconnect-btn>
-    <app-users-list [userList]="userList"></app-users-list>
+  <div>
+    <p>Vous êtes connecté en tant que <strong>{{user.name}}</strong></p>
+  </div>
+  
+  <div *ngIf="userGroupDefined">
+    <p>Vous faite partie du groupe n°<strong>{{user.group}}</strong></p>
+  </div>
+    <app-disconnect-btn class="float-right"></app-disconnect-btn> 
+    <app-user></app-user>
+    <app-group></app-group>
 </div>

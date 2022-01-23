@@ -1,6 +1,8 @@
 import { Component, OnInit } from '@angular/core';
-import { Router } from '@angular/router';
-import { userList } from 'src/app/Models/user';
+import { Router, ActivatedRoute, ParamMap } from '@angular/router';
+import { User, userList } from 'src/app/Models/user';
+import {Group, groupList} from "../../Models/group";
+
 
 @Component({
   selector: 'app-home',
@@ -9,11 +11,12 @@ import { userList } from 'src/app/Models/user';
 })
 export class HomeComponent implements OnInit {
 
-  userList = userList;
-  
-  constructor(private router: Router) { 
-    // This is intentional
-  }
+
+  user = history.state.user;
+  userGroupDefined: boolean = false;
+
+  constructor(private router: Router) { }
+
 
   // Si l'utiliseur n'est pas connecté, redirection vers l'authentification
   ngOnInit(): void {
@@ -21,7 +24,9 @@ export class HomeComponent implements OnInit {
       this.router.navigate(['/auth']);
     }
 
-    console.log(history.state.user);
+    if(history.state.user.group !== undefined){
+      this.userGroupDefined = true;
+    }
   }
 
 }

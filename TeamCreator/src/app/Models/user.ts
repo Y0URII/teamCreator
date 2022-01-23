@@ -5,6 +5,7 @@ export const userList: User[] = [
 { id: 2, name: 'issiah', groupId: -1 },
 { id: 3, name: 'vincent', groupId: -1 },
 { id: 4, name: 'damien', groupId: -1 }
+
 ];
 
 /**
@@ -39,4 +40,17 @@ export class User {
         userList.push(this);
     }
   }
+
+  // @ts-ignore
+  static getUser(userId: number): User{
+    let userReturn;
+    userList.forEach((user) =>{
+      if(user.id === userId){
+        userReturn = user;
+      }
+    });
+    // @ts-ignore
+    return userReturn;
+  }
+
 }

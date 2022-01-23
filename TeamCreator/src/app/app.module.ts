@@ -12,7 +12,9 @@ import { InMemoryDataService } from './Services/in-memory-data.service';
 import { AuthComponent } from './Views/auth/auth.component';
 import { DisconnectBtnComponent } from './Views/disconnect-btn/disconnect-btn.component';
 import { HomeComponent } from './Views/home/home.component';
-import { AdminPageComponent } from './Views/admin-page/admin-page.component';
+import { GroupComponent } from './Views/group/group.component';
+import { UserComponent } from './Views/user/user.component';
+import { InvitComponent } from './Views/invit/invit.component';
 import { GroupConfigService } from './Services/group-config.service';
 import { FormConfigurationComponent } from './Views/admin-page/form-configuration/form-configuration.component';
 import { GroupService } from './Services/group.service';
@@ -21,6 +23,7 @@ import { UsersListComponent } from './Views/users-list/users-list.component';
 import { GroupsListComponent } from './Views/groups-list/groups-list.component';
 import { CreateGroupButtonComponent } from './Views/create-group-button/create-group-button.component';
 import { InitializeGroupsButtonComponent } from './Views/initialize-groups-button/initialize-groups-button.component';
+import {AdminPageComponent} from "./Views/admin-page/admin-page.component";
 
 @NgModule({
   declarations: [
@@ -33,7 +36,13 @@ import { InitializeGroupsButtonComponent } from './Views/initialize-groups-butto
     UsersListComponent,
     GroupsListComponent,
     CreateGroupButtonComponent,
-    InitializeGroupsButtonComponent
+    InitializeGroupsButtonComponent,
+    GroupComponent,
+    UserComponent,
+    InvitComponent,
+    GroupComponent,
+    FormConfigurationComponent,
+    AdminPageComponent
   ],
   imports: [
     BrowserModule,
