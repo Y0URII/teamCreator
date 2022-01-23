@@ -1,3 +1,4 @@
+import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable, of } from 'rxjs';
 import { Group } from '../Models/group';
@@ -31,7 +32,7 @@ export class GroupService {
    * Constructor
    * @param groupConfigService 
    */
-  constructor(private userService: UserService) {
+  constructor(private userService: UserService, private http: HttpClient) {
     // This is intentional
   }
 
@@ -115,8 +116,7 @@ export class GroupService {
    */
   public getGroups(all: boolean): Observable<Group[]> {
     let result = all ? this.groupList : this.groupList.filter(group => group.isActive());
-    const groups = of(result);
-    return groups;
+    return of(result);
   }
 
   //#endregion

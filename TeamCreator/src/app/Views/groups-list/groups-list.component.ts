@@ -7,12 +7,16 @@ import { GroupService } from 'src/app/Services/group.service';
   templateUrl: './groups-list.component.html',
   styleUrls: ['./groups-list.component.css']
 })
+
+/**
+ * Groups list Component
+ */
 export class GroupsListComponent implements OnInit {
 
   groupList: Array<Group> = new Array<Group>();
 
   /**
-   * Groups list
+   * Subscribe to Groups list
    */
   getGroupsList(): void {
     this.groupService.getGroups(this.isAdmin).subscribe(groups => this.groupList = groups);

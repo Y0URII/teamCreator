@@ -19,20 +19,15 @@ export class FormConfigurationComponent implements OnInit {
   /**
    * Last groupConfiguration saved from service
    */
-  groupConfiguration: GroupConfiguration | null = null;
+  groupConfiguration: GroupConfiguration = new GroupConfiguration(-1,-1,LastGroupConfig.None, 0);
 
   /**
    * local enum LastGroupConfig for view
    */
   configs = LastGroupConfig;
-
-  /**
-   * Indicator of error during set config in service
-   */
-  isSetError: boolean = false;
-
-  getError(): void {
-    this.groupConfigService.getErrorConfig().subscribe(error => this.isSetError = error);
+  
+  getconfig(): void {
+    this.groupConfigService.getGroupConfig().subscribe(config => this.groupConfiguration = config);
   };
 
   /**
@@ -40,8 +35,9 @@ export class FormConfigurationComponent implements OnInit {
    */
   configurationForm = this.formBuilder.group({
     totalUsers: [2, Validators.required],
-    usersByGroup: [2, Validators.required],
-    configLastGroup: ['']
+    numberUsersByGroup: [2, Validators.required],
+    configLastGroup: [LastGroupConfig],
+    numberGroups: [0]
   });
 
   //#endregion
@@ -54,19 +50,19 @@ export class FormConfigurationComponent implements OnInit {
   constructor(private groupConfigService: GroupConfigService, private formBuilder: FormBuilder) { }
 
   ngOnInit(): void {
-    // This is intentional
+    this.getconfig();
   }
 
   /**
    * OnSubmit action update group configuration
    */
   onSubmit() {
-    this.groupConfigService.setGroupConfig(this.configurationForm.value);
-
-    // if no error during set config
-    if (!this.isSetError) {
-      this.configurationForm.reset();
-    }
+    console.log(this.configurationForm.value);
+    this.groupConfigService.setGroupConfig(this.configurationForm.value)
+      .subscribe(config => {
+        this.groupConfiguration = config;
+        console.log(config);
+      });
   }
 
   //#region Validators
@@ -99,28 +95,4 @@ export class FormConfigurationComponent implements OnInit {
   }
 
   //#endregion
-
-  /**
-   * Get total number of users base on the configuration group
-   * @returns number total of users
-   */
-  getTotalUsers() {
-    if (this.groupConfiguration != null) {
-      let result = this.groupConfiguration.numberGroups * this.groupConfiguration.numberUsersByGroup;
-      switch (this.groupConfiguration.lastGroupConfig) {
-        case LastGroupConfig.LastMax:
-          result += 1;
-          break;
-        case LastGroupConfig.LastMin:
-          result -= 1;
-          break;
-        case LastGroupConfig.None:
-        default:
-          break;
-      }
-      return result;
-    }
-    return '';
-  }
-
 }

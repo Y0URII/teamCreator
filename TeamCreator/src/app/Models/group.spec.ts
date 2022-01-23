@@ -1,5 +1,4 @@
 import { Group } from './group';
-import { LastGroupConfig } from './group-configuration';
 
 describe('Group', () => {
   it('should create an instance', () => {

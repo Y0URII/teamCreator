@@ -1,5 +1,6 @@
+import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { Observable, of } from 'rxjs';
+import { catchError, Observable, of, tap } from 'rxjs';
 import { GroupConfiguration, LastGroupConfig } from '../Models/group-configuration';
 import { GroupService } from './group.service';
 
@@ -15,21 +16,25 @@ export class GroupConfigService {
   //#region Fields
 
   /**
-  * Group Configuration
-  */
-  private groupConfiguration: GroupConfiguration = new GroupConfiguration(0, 0, LastGroupConfig.None);
+   * URL to web api
+   */
+  private configUrl = 'api/config';
+
+  httpOptions = {
+    headers: new HttpHeaders({ 'Content-Type': 'application/json' })
+  };
 
   /**
-   * Indicate if an error happened on the set configuration
-   */
-  private isSetError: boolean = true;
+  * Group Configuration
+  */
+  private groupConfiguration: GroupConfiguration = new GroupConfiguration(0, 0, LastGroupConfig.None, 0);
 
   //#endregion
 
   /**
    * Constructor
    */
-  constructor(private groupService: GroupService) {
+  constructor(private groupService: GroupService, private http: HttpClient) {
     // This is intentional
   }
 
@@ -38,17 +43,10 @@ export class GroupConfigService {
    * @returns GroupConfiguration
    */
   public getGroupConfig(): Observable<GroupConfiguration> {
-    const config = of(this.groupConfiguration);
-    return config;
-  }
-
-  /**
-   * Get is set error
-   * @returns boolean
-   */
-  public getErrorConfig(): Observable<boolean> {
-    const error = of(this.isSetError);
-    return error;
+    return this.http.get<GroupConfiguration>(this.configUrl)
+                    .pipe(
+                      catchError(this.handleError<GroupConfiguration>('getConfig'))
+                    );
   }
 
   /**
@@ -57,19 +55,19 @@ export class GroupConfigService {
    * @param usersByGroup 
    * @param lastConfig 
    */
-  public setGroupConfig(data: any) {
-    this.isSetError = true;
+  public setGroupConfig(data: GroupConfiguration): Observable<GroupConfiguration> {
+    
     if (data) {
       let totalUsers: number = data.totalUsers;
-      let usersByGroup: number = data.usersByGroup;
+      let usersByGroup: number = data.numberUsersByGroup;
 
       // Equal number of users in group
       if (totalUsers % usersByGroup == 0) {
-        this.setGroupConfiguration(totalUsers / usersByGroup, usersByGroup, LastGroupConfig.None);
+        this.setGroupConfiguration(totalUsers / usersByGroup, usersByGroup, LastGroupConfig.None, totalUsers);
       }
       // Use last group configuration parameter
       else {
-        let config = data.configLastGroup == LastGroupConfig.LastMax ? LastGroupConfig.LastMax : LastGroupConfig.LastMin;
+        let config = data.lastGroupConfig == LastGroupConfig.LastMax ? LastGroupConfig.LastMax : LastGroupConfig.LastMin;
 
         let target: number = totalUsers;
         if (config == LastGroupConfig.LastMax) {
@@ -80,14 +78,19 @@ export class GroupConfigService {
 
         let realNbUsersByGroup = this.findUsersByGroupRepartition(target, usersByGroup);
         let realNbGroup = target / realNbUsersByGroup;
-        this.setGroupConfiguration(realNbGroup, realNbUsersByGroup, config);
+        this.setGroupConfiguration(realNbGroup, realNbUsersByGroup, config, totalUsers);
       }
 
       // Create groups
-      if (this.groupConfiguration != null && !this.isSetError) {
+      if (this.groupConfiguration != null) {
         this.groupService.initializeGroup(this.groupConfiguration);
       }
     }
+    return this.http.post<GroupConfiguration>(this.configUrl, this.groupConfiguration, this.httpOptions)
+    .pipe(
+      tap((newConfig : GroupConfiguration) => console.log("config added in db")),
+      catchError(this.handleError<GroupConfiguration>('addGroupDonfig'))
+    );
   }
 
   //#region Privates Methods
@@ -98,10 +101,9 @@ export class GroupConfigService {
    * @param nbUsersByGroup 
    * @param config 
    */
-  private setGroupConfiguration(nbGroups: number, nbUsersByGroup: number, config: LastGroupConfig) {
+  private setGroupConfiguration(nbGroups: number, nbUsersByGroup: number, config: LastGroupConfig, totalUsers: number) {
     if (nbUsersByGroup > 1) {
-      this.groupConfiguration = new GroupConfiguration(nbGroups, nbUsersByGroup, config);
-      this.isSetError = false;
+      this.groupConfiguration = new GroupConfiguration(nbGroups, nbUsersByGroup, config, totalUsers);
     }
   }
 
@@ -163,6 +165,17 @@ export class GroupConfigService {
     }
 
     return results;
+  }
+
+  private handleError<T>(operation = 'operation', result?: T) {
+    return (error: any): Observable<T> => {
+  
+      // TODO: send the error to remote logging infrastructure
+      console.error(error); // log to console instead
+  
+      // Let the app keep running by returning an empty result.
+      return of(result as T);
+    };
   }
 
   //#endregion
