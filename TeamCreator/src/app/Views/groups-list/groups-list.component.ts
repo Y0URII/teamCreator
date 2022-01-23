@@ -23,12 +23,12 @@ export class GroupsListComponent implements OnInit {
   /**
    * Subscribe to Groups list
    */
-   getGroupsList(): void {
+  getGroupsList(): void {
     this.groupService.GetGroups().subscribe(groups => {
       console.log(groups);
       this.groupList = groups;
-      });
-    };
+    });
+  }
 
   /**
    * Constructor
@@ -42,7 +42,7 @@ export class GroupsListComponent implements OnInit {
    * @param group 
    * @returns 
    */
-  isGroupFull(group: Group){
+  isGroupFull(group: Group) {
     return group.listUsers != null && group.maxUsers == group.listUsers.length;
   }
 

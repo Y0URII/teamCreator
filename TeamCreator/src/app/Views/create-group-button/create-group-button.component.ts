@@ -17,6 +17,7 @@ export class CreateGroupButtonComponent implements OnInit {
   }
 
   ngOnInit(): void {
+    // This is intentional
   }
 
   onClick(){
