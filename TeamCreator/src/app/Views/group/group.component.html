@@ -1,0 +1,23 @@
+
+<h2>Demande de création de groupe</h2>
+<form [formGroup]="createForm" (ngSubmit)="createGroup(user.id)">
+
+  <label for="maxUser">Place dans le groupe : </label>
+  <input required="required" id="maxUser" placeholder="3" type="text" formControlName="maxUser">
+  <button type="submit">Générer le lien</button>
+</form>
+
+<div>
+  <input id="invit" type="text" [(ngModel)]="invitationLink">
+</div>
+
+<button (click)="joinRandomGroup()">Rejoindre un groupe aléatoire</button>
+
+<h2>Liste des groupes</h2>
+<ul class="groups">
+  <li *ngFor="let group of groupList">
+    <span class="badge">{{group.listUsers.length}} / {{group.maxUsers}}</span> Groupe numéro {{group.id}}
+    <button>Membre</button>
+    <button >Rejoindre</button>
+  </li>
+</ul>

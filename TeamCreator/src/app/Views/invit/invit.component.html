@@ -1,0 +1,8 @@
+<form [formGroup]="invitForm" (ngSubmit)="onSubmit()">
+
+  <h2>Rejoingnez le groupe numéro {{ idGroup }} : </h2>
+  <label for="username">Login : </label><br>
+  <input required id="username" placeholder="Username" type="text" formControlName="name" name="name">
+
+  <button type="submit">Submit</button>
+</form>

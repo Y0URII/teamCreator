@@ -1,7 +1,11 @@
-<h2>Liste des utilisateurs</h2>
-<ul class="users">
-  <li *ngFor="let user of userList">
-    <span class="badge">{{user.id}}</span> {{user.name}}
-  </li>
-</ul>
+<div>
+  <p>Vous êtes connecté en tant que <strong>{{user.name}}</strong></p>
+</div>
+
+<div *ngIf="userGroupDefined">
+  <p>Vous faite partie du groupe n°<strong>{{user.group}}</strong></p>
+</div>
+
+<app-user></app-user>
+<app-group></app-group>
 <app-disconnect-btn></app-disconnect-btn>

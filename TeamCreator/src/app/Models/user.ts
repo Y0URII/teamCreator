@@ -1,8 +1,8 @@
 export const userList: User[] = [
-{ id: 1, name: 'marion' },
-{ id: 2, name: 'issiah' },
-{ id: 3, name: 'vincent' },
-{ id: 4, name: 'damien' },
+{ id: 1, name: 'marion', group: undefined},
+{ id: 2, name: 'issiah', group: undefined},
+{ id: 3, name: 'vincent', group: undefined},
+{ id: 4, name: 'damien', group: undefined},
 ];
 
 /**
@@ -11,7 +11,8 @@ export const userList: User[] = [
 export class User {
 
     id: number;
-  name: string | undefined;
+  name: string = '';
+  group: number | undefined;
 
   // Création de l'utilisateur prenant en paramétre un nom
   constructor(name: string) {
@@ -31,4 +32,17 @@ export class User {
         userList.push(this);
     }
   }
+
+  // @ts-ignore
+  static getUser(userId: number): User{
+    let userReturn;
+    userList.forEach((user) =>{
+      if(user.id === userId){
+        userReturn = user;
+      }
+    });
+    // @ts-ignore
+    return userReturn;
+  }
+
 }
