@@ -9,6 +9,8 @@ import { AuthComponent } from './Views/auth/auth.component';
 import { DisconnectBtnComponent } from './Views/disconnect-btn/disconnect-btn.component';
 import { HomeComponent } from './Views/home/home.component';
 import { GroupComponent } from './Views/group/group.component';
+import { UserComponent } from './Views/user/user.component';
+import { InvitComponent } from './Views/invit/invit.component';
 
 @NgModule({
   declarations: [
@@ -16,7 +18,9 @@ import { GroupComponent } from './Views/group/group.component';
     AuthComponent,
     HomeComponent,
     DisconnectBtnComponent,
-    GroupComponent
+    GroupComponent,
+    UserComponent,
+    InvitComponent
   ],
   imports: [
     BrowserModule,

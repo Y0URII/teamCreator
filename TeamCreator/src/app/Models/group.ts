@@ -2,7 +2,7 @@ import { User } from "./user";
 
 
 export const groupList: Group[] = [
-  { id: 1, maxUsers: 3, listUsers: [{ id: 1, name: 'marion' }, { id: 2, name: 'issiah' }] },
+  { id: 1, maxUsers: 3, listUsers: [{ id: 1, name: 'marion', group: 1}, { id: 2, name: 'issiah', group: 1}] },
   { id: 2, maxUsers: 2, listUsers: [] },
   { id: 3, maxUsers: 1, listUsers: [] },
 ];

@@ -1,0 +1,13 @@
+<h2>Liste des utilisateurs</h2>
+<ul class="users">
+  <li *ngFor="let user of userList">
+    <span class="badge">{{user.id}}</span> {{user.name}}
+  </li>
+</ul>
+
+<h2>Liste des utilisateurs sans groupe</h2>
+<ul class="users">
+  <li *ngFor="let userWithoutGroup of userWithoutGroupList">
+    <span class="badge">{{userWithoutGroup.id}}</span> {{userWithoutGroup.name}}
+  </li>
+</ul>

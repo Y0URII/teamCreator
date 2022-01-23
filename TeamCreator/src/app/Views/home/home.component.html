@@ -2,25 +2,10 @@
   <p>Vous êtes connecté en tant que <b>{{user.name}}</b></p>
 </div>
 
-<div>
-  <p>Vous faite partie du groupe n°<b>{{group.id}}</b></p>
+<div *ngIf="userGroupDefined">
+  <p>Vous faite partie du groupe n°<b>{{user.group}}</b></p>
 </div>
 
-
-<h2>Liste des utilisateurs</h2>
-<ul class="users">
-  <li *ngFor="let user of userList">
-    <span class="badge">{{user.id}}</span> {{user.name}}
-  </li>
-</ul>
-
-<h2>Liste des utilisateurs sans groupe</h2>
-<ul class="users">
-  <li *ngFor="let userWithoutGroup of userWithoutGroupList">
-    <span class="badge">{{userWithoutGroup.id}}</span> {{userWithoutGroup.name}}
-  </li>
-</ul>
-
-
+<app-user></app-user>
 <app-group></app-group>
 <app-disconnect-btn></app-disconnect-btn>

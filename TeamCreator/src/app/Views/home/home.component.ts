@@ -10,12 +10,9 @@ import {Group, groupList} from "../../Models/group";
 })
 export class HomeComponent implements OnInit {
 
-  userList = userList;
-  groupList = groupList;
-  user = history.state.user;
-  group = history.state.group;
 
-  userWithoutGroupList: User[] = [];
+  user = history.state.user;
+  userGroupDefined: boolean = false;
 
   constructor(private router: Router) { }
 
@@ -24,20 +21,10 @@ export class HomeComponent implements OnInit {
     if(history.state.user == undefined){
       this.router.navigate(['/auth']);
     }
-    let userInGroupTab: number[] = [];
-    groupList.forEach((group) =>{
-      group.listUsers.forEach((userInGroup) =>{
-        if(!userInGroupTab.includes(userInGroup.id)){
-          userInGroupTab.push(userInGroup.id);
-        }
-      });
-    });
 
-    userList.forEach((user) =>{
-      if(!userInGroupTab.includes(user.id)){
-        this.userWithoutGroupList.push(user)
-      }
-    });
+    if(history.state.user.group !== undefined){
+      this.userGroupDefined = true;
+    }
   }
 
 
