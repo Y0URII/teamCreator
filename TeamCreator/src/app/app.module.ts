@@ -11,6 +11,7 @@ import { DisconnectBtnComponent } from './Views/disconnect-btn/disconnect-btn.co
 import { HomeComponent } from './Views/home/home.component';
 import { AdminPageComponent } from './Views/admin-page/admin-page.component';
 import { GroupConfigService } from './Services/group-config.service';
+import { FormConfigurationComponent } from './Views/admin-page/form-configuration/form-configuration.component';
 
 @NgModule({
   declarations: [
@@ -18,7 +19,8 @@ import { GroupConfigService } from './Services/group-config.service';
     AuthComponent,
     HomeComponent,
     DisconnectBtnComponent,
-    AdminPageComponent
+    AdminPageComponent,
+    FormConfigurationComponent
   ],
   imports: [
     BrowserModule,
