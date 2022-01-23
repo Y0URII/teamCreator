@@ -1,4 +1,5 @@
 import { Injectable } from '@angular/core';
+import { Observable, of } from 'rxjs';
 import { GroupConfiguration, LastGroupConfig } from '../Models/group-configuration';
 import { GroupService } from './group.service';
 
@@ -16,7 +17,7 @@ export class GroupConfigService {
   /**
   * Group Configuration
   */
-  private groupConfiguration: GroupConfiguration | null = null;
+  private groupConfiguration: GroupConfiguration = new GroupConfiguration(0,0, LastGroupConfig.None);
 
   /**
    * Indicate if an error happened on the set configuration
@@ -36,16 +37,18 @@ export class GroupConfigService {
    * Get Group Configuration
    * @returns GroupConfiguration
    */
-  public getGroupConfig() {
-    return this.groupConfiguration;
+  public getGroupConfig() : Observable<GroupConfiguration> {
+    const config = of(this.groupConfiguration);
+    return config;
   }
 
   /**
    * Get is set error
    * @returns boolean
    */
-  public getSetError() {
-    return this.isSetError;
+  public getErrorConfig() : Observable<boolean> {
+    const error = of(this.isSetError);
+    return error;
   }
 
   /**
@@ -81,7 +84,7 @@ export class GroupConfigService {
       }
 
       // Create groups
-      if(this.groupConfiguration != null){
+      if(this.groupConfiguration != null && !this.isSetError){
         this.groupService.initializeGroup(this.groupConfiguration);
       }
     }

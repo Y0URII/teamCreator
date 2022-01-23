@@ -1,7 +1,5 @@
-<h2>Liste des utilisateurs</h2>
-<ul class="users">
-  <li *ngFor="let user of userList">
-    <span class="badge">{{user.id}}</span> {{user.name}}
-  </li>
-</ul>
-<app-disconnect-btn></app-disconnect-btn>
+<div class="container">
+    <h1 class="mb-3">Bienvenue</h1>
+    <app-disconnect-btn class="float-right"></app-disconnect-btn>
+    <app-users-list [userList]="userList"></app-users-list>
+</div>

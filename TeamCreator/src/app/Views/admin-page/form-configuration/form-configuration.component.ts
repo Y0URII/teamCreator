@@ -31,6 +31,10 @@ export class FormConfigurationComponent implements OnInit {
    */
   isSetError: boolean = false;
 
+  getError(): void {
+    this.groupConfigService.getErrorConfig().subscribe(error => this.isSetError = error);
+  };
+
   /**
    * Form input for group configuration
    */
@@ -57,13 +61,10 @@ export class FormConfigurationComponent implements OnInit {
    * OnSubmit action update group configuration
    */
   onSubmit() {
-    let result = this.configurationForm.value;
-    console.log(result);
     this.groupConfigService.setGroupConfig(this.configurationForm.value);
-    this.isSetError = this.groupConfigService.getSetError();
+
     // if no error during set config
-    if (!this.groupConfigService.getSetError()) {
-      this.groupConfiguration = this.groupConfigService.getGroupConfig();
+    if (!this.isSetError) {
       this.configurationForm.reset();
     }
   }

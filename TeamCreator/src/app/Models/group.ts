@@ -10,7 +10,6 @@ export class Group {
     public id = 0;
     public maxUsers = 0;
     public listUsers:Array<User> = new Array<User>();
-    public activated = false;
 
     //#endregion
 
@@ -31,6 +30,14 @@ export class Group {
      */
     public isGroupFull(){
         return this.maxUsers == this.listUsers.length;
+    }
+
+    /**
+     * Is group activated
+     * @returns boolean
+     */
+    public isActive(){
+        return this.listUsers.length > 1;
     }
 
 }

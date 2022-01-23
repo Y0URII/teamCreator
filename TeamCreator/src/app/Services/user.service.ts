@@ -63,6 +63,14 @@ export class UserService {
     return this.userList.find(user => user.name == name);
   }
 
+  /**
+   * Get users list
+   * @returns users list
+   */
+  public getUsers(){
+    return this.userList;
+  }
+
   //#endregion
 
 }

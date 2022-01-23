@@ -14,6 +14,9 @@ import { GroupConfigService } from './Services/group-config.service';
 import { FormConfigurationComponent } from './Views/admin-page/form-configuration/form-configuration.component';
 import { GroupService } from './Services/group.service';
 import { UserService } from './Services/user.service';
+import { UsersListComponent } from './Views/users-list/users-list.component';
+import { GroupsListComponent } from './Views/groups-list/groups-list.component';
+import { CreateGroupButtonComponent } from './Views/create-group-button/create-group-button.component';
 
 @NgModule({
   declarations: [
@@ -22,7 +25,10 @@ import { UserService } from './Services/user.service';
     HomeComponent,
     DisconnectBtnComponent,
     AdminPageComponent,
-    FormConfigurationComponent
+    FormConfigurationComponent,
+    UsersListComponent,
+    GroupsListComponent,
+    CreateGroupButtonComponent
   ],
   imports: [
     BrowserModule,

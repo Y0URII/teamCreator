@@ -1,8 +1,7 @@
-import { Injectable } from '@angular/core';
+import { EventEmitter, Injectable, Output } from '@angular/core';
+import { Observable, of } from 'rxjs';
 import { Group } from '../Models/group';
 import { GroupConfiguration, LastGroupConfig } from '../Models/group-configuration';
-import { User } from '../Models/user';
-import { GroupConfigService } from './group-config.service';
 import { UserService } from './user.service';
 
 @Injectable({
@@ -32,7 +31,7 @@ export class GroupService {
    * Constructor
    * @param groupConfigService 
    */
-  constructor(private groupConfigService: GroupConfigService, private userService: UserService) { 
+  constructor(private userService: UserService) { 
     // This is intentional
   }
 
@@ -74,22 +73,6 @@ export class GroupService {
   }
 
   /**
-   * Activate group
-   * @param id 
-   */
-  public activateGroup(id: number){
-    this.groupList[id].activated = true;
-  }
-
-  /**
-   * Deactivate group
-   * @param id 
-   */
-  public deactivateGroup(id: number){
-    this.groupList[id].activated = false;
-  }
-
-  /**
    * Add user to group
    * @param id group id
    * @param name user name
@@ -115,12 +98,25 @@ export class GroupService {
   public removeUserFromGroup(userName: string, groupId: number){
     let user = this.userService.getUserbyName(userName);
     let group = this.groupList.find(group => group.id == groupId);
+
     if(user != null && group != null){
       let groupIndex = this.groupList.findIndex(g => g == group);
       let userIndex = group.listUsers.findIndex(u => u == user);
+
       this.groupList[groupIndex].listUsers.slice(userIndex);
       this.userService.setGroupToUser(user, -1);
     }
+  }
+
+  /**
+   * Get group list
+   * @param all every groups
+   * @returns 
+   */
+  public getGroups(all:boolean) : Observable<Group[]> {
+    let result = all ? this.groupList : this.groupList.filter( group => group.isActive());
+    const groups = of(result);
+    return groups;
   }
 
   //#endregion

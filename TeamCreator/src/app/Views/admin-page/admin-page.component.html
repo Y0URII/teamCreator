@@ -1,5 +1,27 @@
-<div class="container m-3 ">
-    <h1 class=" align-center m-3">Bienvenue Admin</h1>
-    <app-disconnect-btn class="float-right"></app-disconnect-btn>
-    <app-form-configuration></app-form-configuration>
+<div class="container">
+    <div class="row">
+        <div class="col">        
+            <h1 class="justify-center m-3">Bienvenue Admin</h1>
+        </div>
+        <div class="col-md-auto align-self-end">
+            <app-disconnect-btn></app-disconnect-btn>
+        </div>
+    </div>
+    <div class="row">
+        <hr>
+    </div>
+    <div class="row border border-prmary rounded-bottom pt-2">
+        <div class="col">
+            <div class="row">
+                <app-form-configuration></app-form-configuration>
+            </div>
+            <div class="row">
+                <hr class="p-2">
+            </div>
+            <div class="row"></div>
+        </div>
+        <div class="col">
+            <app-groups-list></app-groups-list>
+        </div>
+    </div>
 </div>
