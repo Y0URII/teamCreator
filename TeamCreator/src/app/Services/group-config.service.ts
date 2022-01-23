@@ -27,7 +27,9 @@ export class GroupConfigService {
   /**
    * Constructor
    */
-  constructor() { }
+  constructor() {
+    // This is intentional
+   }
 
   /**
    * Get Group Configuration
@@ -52,21 +54,17 @@ export class GroupConfigService {
    * @param lastConfig 
    */
   public setGroupConfig(data:any){
+    this.isSetError = true;
     if(data){
-      console.log("Starting try set up group");
-      console.log(data + "\n");
       let totalUsers: number = data.totalUsers;
       let usersByGroup: number = data.usersByGroup;
 
       // Equal number of users in group
-      if(totalUsers % usersByGroup == 0 && usersByGroup > 1){
-        console.log("equal number\n");
-        this.groupConfiguration = new GroupConfiguration(totalUsers / usersByGroup, usersByGroup, LastGroupConfig.None);
-        this.isSetError = false;
+      if(totalUsers % usersByGroup == 0){
+        this.setGroupConfiguration(totalUsers / usersByGroup, usersByGroup, LastGroupConfig.None);
       }
       // Use last group configuration parameter
       else {
-        console.log("Not so easy\n");
         let config = data.configLastGroup == LastGroupConfig.LastMax ? LastGroupConfig.LastMax : LastGroupConfig.LastMin;
 
         let target:number = totalUsers;
@@ -77,15 +75,8 @@ export class GroupConfigService {
         }
 
         let realNbUsersByGroup = this.findUsersByGroupRepartition(target, usersByGroup);
-        if(realNbUsersByGroup > 1){
-          let realNbGroup = target / realNbUsersByGroup;
-          this.groupConfiguration = new GroupConfiguration(realNbGroup, realNbUsersByGroup, config);
-          this.isSetError = false;
-        }
-        else{
-          this.isSetError = true;
-        }
-
+        let realNbGroup = target / realNbUsersByGroup;
+        this.setGroupConfiguration(realNbGroup, realNbUsersByGroup, config);
       }
   
       //TODO: call group service to create group
@@ -93,6 +84,19 @@ export class GroupConfigService {
   }
 
   //#region Privates Methods
+
+  /**
+   * Set private group configuration
+   * @param nbGroups 
+   * @param nbUsersByGroup 
+   * @param config 
+   */
+  private setGroupConfiguration(nbGroups: number, nbUsersByGroup: number, config: LastGroupConfig){
+    if(nbUsersByGroup > 1){
+      this.groupConfiguration = new GroupConfiguration(nbGroups, nbUsersByGroup, config);
+      this.isSetError = false;
+    }
+  }
 
   /**
    * Return optimal number of users by group

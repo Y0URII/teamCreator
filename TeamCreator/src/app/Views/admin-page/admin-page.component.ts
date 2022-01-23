@@ -14,9 +14,12 @@ export class AdminPageComponent implements OnInit {
   /**
    * Constructor 
    */
-  constructor() {  }
+  constructor() {  
+    // This is intentional
+  }
 
   ngOnInit(): void {
+    // This is intentional
   }
 
 }

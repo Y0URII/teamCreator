@@ -50,6 +50,7 @@ export class FormConfigurationComponent implements OnInit {
   constructor(private groupConfigService: GroupConfigService, private formBuilder: FormBuilder) { }
 
   ngOnInit(): void {
+    // This is intentional
   }
 
   /**
