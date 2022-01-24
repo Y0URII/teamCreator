@@ -5,7 +5,6 @@ export const userList: User[] = [
 { id: 2, name: 'issiah', groupId: -1 },
 { id: 3, name: 'vincent', groupId: -1 },
 { id: 4, name: 'damien', groupId: -1 }
-
 ];
 
 /**

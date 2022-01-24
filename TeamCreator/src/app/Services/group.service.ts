@@ -51,7 +51,7 @@ export class GroupService {
 
   /**
    * Constructor
-   * @param groupConfigService 
+   * @param groupConfigService
    */
   constructor(private groupConfigService: GroupConfigService,
     private userService: UserService,
@@ -63,7 +63,7 @@ export class GroupService {
 
   /**
    * Get group list
-   * @returns 
+   * @returns
    */
   public GetGroups(): Observable<Group[]> {
     return this.http.get<Group[]>(this.groupUrl)
@@ -92,10 +92,10 @@ export class GroupService {
   /**
    * Get group by id
    * @param id group id
-   * @returns 
+   * @returns
    */
   public getGroupbyId(id: number) {
-    return this.groupList.length != 0 ? this.groupList[id] : false;
+    return this.groupList.length != 0 ? this.groupList[id-1] : false;
   }
 
   /**
@@ -118,8 +118,8 @@ export class GroupService {
 
   /**
    * remove user from group and reset user group
-   * @param userName 
-   * @param groupId 
+   * @param userName
+   * @param groupId
    */
   public removeUserFromGroup(userName: string, groupId: number) {
     let user = this.userService.getUserbyName(userName);
